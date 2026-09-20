@@ -254,7 +254,7 @@
                 if(successCallback) successCallback();
             })
             .catch(err => {
-                alert("Error saving to cloud!");
+                alert("Error saving to cloud! Image size bohat bari ho sakti hai.");
                 console.error(err);
             });
         }
@@ -327,33 +327,62 @@
             let fileInput = document.getElementById('newToyFile');
 
             if (fileInput.files && fileInput.files[0]) {
-                let reader = new FileReader();
                 let btn = document.getElementById('saveToyBtn');
-                btn.innerText = "Processing Image & Saving...";
+                btn.innerText = "Compressing Image & Saving...";
                 btn.disabled = true;
 
+                let reader = new FileReader();
                 reader.onload = function(uploadEvent) {
-                    let imageDataUrl = uploadEvent.target.result;
+                    let img = new Image();
+                    img.src = uploadEvent.target.result;
+                    img.onload = function() {
+                        let canvas = document.createElement('canvas');
+                        let ctx = canvas.getContext('2d');
+                        
+                        let MAX_WIDTH = 400;
+                        let MAX_HEIGHT = 400;
+                        let width = img.width;
+                        let height = img.height;
 
-                    let newToy = {
-                        id: Date.now(),
-                        name: name,
-                        price: price.startsWith('Rs') ? price : `Rs ${price}`,
-                        category: "Toys & Fun",
-                        image: imageDataUrl
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Compress image to lightweight JPEG
+                        let compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                        let newToy = {
+                            id: Date.now(),
+                            name: name,
+                            price: price.startsWith('Rs') ? price : `Rs ${price}`,
+                            category: "Toys & Fun",
+                            image: compressedDataUrl
+                        };
+
+                        let updatedList = [newToy, ...products];
+
+                        saveProductsToCloud(updatedList, function() {
+                            btn.innerText = "Save & Publish to Cloud 🚀";
+                            btn.disabled = false;
+                            document.getElementById('newToyName').value = '';
+                            document.getElementById('newToyPrice').value = '';
+                            document.getElementById('newToyFile').value = '';
+                            renderAdminProductList();
+                            alert("Toy successfully compress ho kar cloud par save ho gaya!");
+                        });
                     };
-
-                    let updatedList = [newToy, ...products];
-
-                    saveProductsToCloud(updatedList, function() {
-                        btn.innerText = "Save & Publish to Cloud 🚀";
-                        btn.disabled = false;
-                        document.getElementById('newToyName').value = '';
-                        document.getElementById('newToyPrice').value = '';
-                        document.getElementById('newToyFile').value = '';
-                        renderAdminProductList();
-                        alert("Toy image ke sath successfully cloud par add ho gaya!");
-                    });
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             }
