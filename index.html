@@ -33,8 +33,8 @@
             <!-- Navigation Actions -->
             <div class="flex items-center space-x-3">
                 <!-- Admin Panel Button -->
-                <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-1.5 cursor-pointer">
-                    <span>⚙️</span> <span class="hidden sm:inline">Admin Panel</span>
+                <button onclick="openAdminLogin()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-1 cursor-pointer">
+                    <span>⚙️ Admin Panel</span>
                 </button>
                 <!-- Cart Button with Badge -->
                 <button onclick="openCartModal()" class="relative bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-2 cursor-pointer">
@@ -70,7 +70,7 @@
         <div>
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-extrabold text-white text-lg md:text-xl drop-shadow">📦 Available Toys</h3>
-                <span id="productCount" class="text-indigo-200 text-xs font-semibold">Showing items</span>
+                <span id="productCount" class="text-indigo-200 text-xs font-semibold">Loading items...</span>
             </div>
             
             <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -104,6 +104,53 @@
         <p class="font-medium">A&M Online Store • All Rights Reserved</p>
         <p class="text-emerald-400 font-bold">WhatsApp Helpline (Only): 0313 7221362</p>
     </footer>
+
+    <!-- ADMIN MODAL -->
+    <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative border border-gray-100">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h2 class="text-lg font-extrabold text-indigo-900">⚙️ Cloud Admin Panel</h2>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            </div>
+
+            <!-- Password Form -->
+            <div id="adminLoginForm" class="space-y-3 text-xs">
+                <p class="text-gray-600">Admin panel access karne ke liye password dalein</p>
+                <input type="password" id="adminPassInput" placeholder="Enter Password..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
+                <button onclick="verifyAdmin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition shadow">Login</button>
+            </div>
+
+            <!-- Add Toy Form (Hidden initially) -->
+            <div id="adminDashboard" class="hidden space-y-4 text-xs">
+                <div class="p-3 bg-emerald-50 text-emerald-800 font-semibold rounded-xl">
+                    ✅ Admin Logged In Successfully! (Cloud Connected)
+                </div>
+                <h3 class="font-extrabold text-gray-800 text-sm">Add New Toy to Cloud</h3>
+                <form onsubmit="addNewToyToCloud(event)" class="space-y-3">
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Toy Name:</label>
+                        <input type="text" id="newToyName" required placeholder="Jaise: Remote Car..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Price (e.g. Rs 500):</label>
+                        <input type="text" id="newToyPrice" required placeholder="Rs 500" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Upload Toy Image (Select File):</label>
+                        <input type="file" id="newToyFile" accept="image/*" required class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    </div>
+                    <button type="submit" id="saveToyBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow cursor-pointer">
+                        Save & Publish to Cloud 🚀
+                    </button>
+                </form>
+
+                <div class="border-t pt-4 mt-4">
+                    <h4 class="font-extrabold text-gray-800 mb-2">Manage Existing Toys</h4>
+                    <div id="adminProductList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- CART MODAL -->
     <div id="cartModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
@@ -158,70 +205,65 @@
         </div>
     </div>
 
-    <!-- ADMIN PANEL MODAL -->
-    <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl p-6 relative border border-gray-100">
-            <div class="flex justify-between items-center mb-4 border-b pb-3 sticky top-0 bg-white z-10">
-                <h2 class="text-xl font-extrabold text-amber-700">⚙️ Admin Control Panel</h2>
-                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-700 text-3xl font-bold leading-none">&times;</button>
-            </div>
-
-            <!-- Admin Tabs Navigation -->
-            <div class="flex space-x-2 mb-4">
-                <button onclick="switchAdminTab('productsTab')" id="btnProductsTab" class="bg-indigo-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">Manage Products</button>
-                <button onclick="switchAdminTab('ordersTab')" id="btnOrdersTab" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold shadow">Customer Orders (<span id="orderCountBadge">0</span>)</button>
-            </div>
-
-            <!-- TAB 1: Products Management -->
-            <div id="productsTab" class="space-y-6">
-                <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 space-y-3">
-                    <h3 class="font-bold text-amber-900 text-sm">➕ Add New Toy</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input type="text" id="newProdName" placeholder="Toy Name..." class="px-3 py-2 text-xs rounded-lg border border-gray-300">
-                        <input type="text" id="newProdPrice" placeholder="Price (e.g. Rs 1,200)..." class="px-3 py-2 text-xs rounded-lg border border-gray-300">
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input type="text" value="Toys & Fun" disabled class="px-3 py-2 text-xs rounded-lg border border-gray-300 bg-gray-100 text-gray-600 font-semibold">
-                        <input type="file" id="newProdImage" accept="image/*" class="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-600 file:text-white">
-                    </div>
-                    <button onclick="addNewProduct()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 rounded-xl text-xs transition shadow">Save & Publish Toy</button>
-                </div>
-
-                <div>
-                    <h4 class="font-bold text-gray-800 text-sm mb-2">Existing Inventory</h4>
-                    <div id="adminProductList" class="space-y-2 max-h-60 overflow-y-auto pr-2"></div>
-                </div>
-            </div>
-
-            <!-- TAB 2: Orders Management -->
-            <div id="ordersTab" class="space-y-4 hidden">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-gray-800 text-sm">Customer Orders Received</h3>
-                    <button onclick="clearAllOrders()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs font-bold transition">Clear All Orders</button>
-                </div>
-                <div id="adminOrdersList" class="space-y-3 max-h-96 overflow-y-auto"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript Application Engine -->
+    <!-- JavaScript Application Engine with JSONBin.io -->
     <script>
-        let products = JSON.parse(localStorage.getItem('am_toys_products')) || [];
+        // JSONBin Credentials
+        const BIN_ID = "6aafb0c2ac6210605ae2291a";
+        const MASTER_KEY = "$2a$10$5A09bWvA53N8Mnyb6spQ6ee3Z/PRXj/DgA03gr.I2JWeLVQaEZwyG";
+
+        let products = [];
         let cart = JSON.parse(localStorage.getItem('am_toys_cart')) || [];
-        let orders = JSON.parse(localStorage.getItem('am_toys_orders')) || [];
 
         window.onload = function() {
-            renderProducts();
+            fetchProductsFromCloud();
             updateCartBadge();
-            renderAdminProducts();
-            renderAdminOrders();
         };
+
+        // Fetch Products from JSONBin Cloud
+        function fetchProductsFromCloud() {
+            fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: {
+                    'X-Master-Key': MASTER_KEY
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                products = data.record || [];
+                renderProducts();
+            })
+            .catch(err => {
+                console.error("Error fetching products:", err);
+                document.getElementById('productGrid').innerHTML = `<p class="col-span-full text-center text-red-300 text-sm py-10">Failed to load cloud products. Please refresh!</p>`;
+            });
+        }
+
+        // Save Products to JSONBin Cloud
+        function saveProductsToCloud(updatedProducts, successCallback) {
+            fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': MASTER_KEY
+                },
+                body: JSON.stringify(updatedProducts)
+            })
+            .then(res => res.json())
+            .then(data => {
+                products = updatedProducts;
+                renderProducts();
+                if(successCallback) successCallback();
+            })
+            .catch(err => {
+                alert("Error saving to cloud!");
+                console.error(err);
+            });
+        }
 
         function renderProducts(filteredList = products) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
             
-            if (filteredList.length === 0) {
+            if (!filteredList || filteredList.length === 0) {
                 grid.innerHTML = `<p class="col-span-full text-center text-white text-sm py-10">No toys available yet. Admin can add toys from the Admin Panel.</p>`;
                 document.getElementById('productCount').innerText = `Showing 0 items`;
                 return;
@@ -233,7 +275,7 @@
                         <div>
                             <img src="${prod.image}" alt="${prod.name}" class="w-full h-40 object-cover">
                             <div class="p-4">
-                                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${prod.category}</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${prod.category || 'Toys & Fun'}</span>
                                 <h4 class="font-bold text-gray-900 text-sm mt-2">${prod.name}</h4>
                                 <p class="text-indigo-700 font-extrabold text-base mt-1">${prod.price}</p>
                             </div>
@@ -255,6 +297,97 @@
             renderProducts(filtered);
         }
 
+        // Admin Panel Functions
+        function openAdminLogin() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminLoginForm').classList.remove('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('adminPassInput').value = '';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function verifyAdmin() {
+            let pass = document.getElementById('adminPassInput').value;
+            if (pass === "0101") {
+                document.getElementById('adminLoginForm').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                renderAdminProductList();
+            } else {
+                alert("Ghalat Password! Dobara koshish karein.");
+            }
+        }
+
+        function addNewToyToCloud(e) {
+            e.preventDefault();
+            let name = document.getElementById('newToyName').value;
+            let price = document.getElementById('newToyPrice').value;
+            let fileInput = document.getElementById('newToyFile');
+
+            if (fileInput.files && fileInput.files[0]) {
+                let reader = new FileReader();
+                let btn = document.getElementById('saveToyBtn');
+                btn.innerText = "Processing Image & Saving...";
+                btn.disabled = true;
+
+                reader.onload = function(uploadEvent) {
+                    let imageDataUrl = uploadEvent.target.result;
+
+                    let newToy = {
+                        id: Date.now(),
+                        name: name,
+                        price: price.startsWith('Rs') ? price : `Rs ${price}`,
+                        category: "Toys & Fun",
+                        image: imageDataUrl
+                    };
+
+                    let updatedList = [newToy, ...products];
+
+                    saveProductsToCloud(updatedList, function() {
+                        btn.innerText = "Save & Publish to Cloud 🚀";
+                        btn.disabled = false;
+                        document.getElementById('newToyName').value = '';
+                        document.getElementById('newToyPrice').value = '';
+                        document.getElementById('newToyFile').value = '';
+                        renderAdminProductList();
+                        alert("Toy image ke sath successfully cloud par add ho gaya!");
+                    });
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        function renderAdminProductList() {
+            let list = document.getElementById('adminProductList');
+            list.innerHTML = '';
+            if (products.length === 0) {
+                list.innerHTML = `<p class="text-gray-500 text-xs">No products found.</p>`;
+                return;
+            }
+            products.forEach((prod, index) => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl border mb-1">
+                        <span class="truncate w-32 font-medium text-gray-800">${prod.name}</span>
+                        <span class="text-indigo-600 font-bold">${prod.price}</span>
+                        <button onclick="deleteCloudToy(${prod.id})" class="text-red-500 font-bold px-2 py-1">🗑️</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteCloudToy(id) {
+            if (confirm("Kya aap waqai is toy ko delete karna chahte hain?")) {
+                let updatedList = products.filter(p => p.id !== id);
+                saveProductsToCloud(updatedList, function() {
+                    renderAdminProductList();
+                    alert("Toy delete ho gaya!");
+                });
+            }
+        }
+
+        // Cart Functions
         function addToCart(id) {
             let prod = products.find(p => p.id === id);
             let existing = cart.find(item => item.id === id);
@@ -357,194 +490,18 @@
             let phone = document.getElementById('custPhone').value;
             let address = document.getElementById('custAddress').value;
 
-            let newOrder = {
-                id: Date.now(),
-                name,
-                phone,
-                address,
-                items: [...cart],
-                date: new Date().toLocaleString()
-            };
+            let orderText = `*New Order Placed!*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A%0A*Items:*%0A`;
+            cart.forEach(i => {
+                orderText += `- ${i.name} (${i.price}) x ${i.qty}%0A`;
+            });
 
-            orders.unshift(newOrder);
-            localStorage.setItem('am_toys_orders', JSON.stringify(orders));
+            let whatsappUrl = `https://wa.me/923137221362?text=${orderText}`;
+            window.open(whatsappUrl, '_blank');
 
             cart = [];
             saveAndRefreshCart();
             closeCheckoutModal();
-            renderAdminOrders();
-
-            alert("Order Successfully Placed! Store management will contact you on WhatsApp Helpline: 0313 7221362.");
-        }
-
-        // --- PASSWORD LOCK LOGIC (3 Strikes = 2 Min Lock) ---
-        function openAdminModal() {
-            let lockUntil = localStorage.getItem('am_lock_until');
-            let now = new Date().getTime();
-
-            if (lockUntil && now < lockUntil) {
-                let remainingSecs = Math.ceil((lockUntil - now) / 1000);
-                let mins = Math.floor(remainingSecs / 60);
-                let secs = remainingSecs % 60;
-                alert(`⚠️ Too many incorrect attempts! Admin panel is locked for ${mins}m ${secs}s.`);
-                return;
-            }
-
-            let pass = prompt("Enter Admin Password:");
-            if (pass === null) return;
-
-            let failedAttempts = parseInt(localStorage.getItem('am_failed_attempts')) || 0;
-
-            if (pass === "0101") {
-                localStorage.setItem('am_failed_attempts', '0');
-                document.getElementById('adminModal').classList.remove('hidden');
-                renderAdminProducts();
-                renderAdminOrders();
-            } else {
-                failedAttempts += 1;
-                localStorage.setItem('am_failed_attempts', failedAttempts);
-
-                if (failedAttempts >= 3) {
-                    let lockTime = now + (2 * 60 * 1000); // 2 Minutes Lock
-                    localStorage.setItem('am_lock_until', lockTime);
-                    localStorage.setItem('am_failed_attempts', '0');
-                    alert("❌ 3 times incorrect password! Admin panel is locked for 2 minutes.");
-                } else {
-                    let remaining = 3 - failedAttempts;
-                    alert(`❌ Incorrect Password! ${remaining} attempt(s) remaining before 2-minute lock.`);
-                }
-            }
-        }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.add('hidden');
-        }
-
-        function switchAdminTab(tabId) {
-            if (tabId === 'productsTab') {
-                document.getElementById('productsTab').classList.remove('hidden');
-                document.getElementById('ordersTab').classList.add('hidden');
-                document.getElementById('btnProductsTab').className = "bg-indigo-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow";
-                document.getElementById('btnOrdersTab').className = "bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold shadow";
-            } else {
-                document.getElementById('productsTab').classList.add('hidden');
-                document.getElementById('ordersTab').classList.remove('hidden');
-                document.getElementById('btnOrdersTab').className = "bg-indigo-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow";
-                document.getElementById('btnProductsTab').className = "bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold shadow";
-            }
-        }
-
-        function addNewProduct() {
-            let name = document.getElementById('newProdName').value;
-            let price = document.getElementById('newProdPrice').value;
-            let category = "Toys & Fun";
-            let imageInput = document.getElementById('newProdImage');
-
-            if (!name || !price) {
-                alert("Please enter toy name and price!");
-                return;
-            }
-
-            if (imageInput.files && imageInput.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    saveNewProductData(name, price, category, e.target.result);
-                }
-                reader.readAsDataURL(imageInput.files[0]);
-            } else {
-                saveNewProductData(name, price, category, "https://via.placeholder.com/300x200?text=Toy");
-            }
-        }
-
-        function saveNewProductData(name, price, category, image) {
-            let newProd = { id: Date.now(), name, price, category, image };
-            products.unshift(newProd);
-            localStorage.setItem('am_toys_products', JSON.stringify(products));
-            renderProducts();
-            renderAdminProducts();
-
-            document.getElementById('newProdName').value = '';
-            document.getElementById('newProdPrice').value = '';
-            document.getElementById('newProdImage').value = '';
-            alert("Toy added successfully!");
-        }
-
-        function renderAdminProducts() {
-            let list = document.getElementById('adminProductList');
-            list.innerHTML = '';
-            
-            if(products.length === 0) {
-                list.innerHTML = `<p class="text-center text-gray-400 text-xs py-4">No toys added yet.</p>`;
-                return;
-            }
-
-            products.forEach((prod) => {
-                list.innerHTML += `
-                    <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl border text-xs">
-                        <div class="flex items-center space-x-2">
-                            <img src="${prod.image}" class="w-10 h-10 object-cover rounded-lg">
-                            <div>
-                                <span class="font-bold text-gray-800">${prod.name}</span>
-                                <span class="text-indigo-700 font-semibold ml-2">(${prod.price})</span>
-                            </div>
-                        </div>
-                        <button onclick="deleteProduct(${prod.id})" class="bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg font-bold">Delete</button>
-                    </div>
-                `;
-            });
-        }
-
-        function deleteProduct(id) {
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('am_toys_products', JSON.stringify(products));
-            renderProducts();
-            renderAdminProducts();
-        }
-
-        function renderAdminOrders() {
-            let list = document.getElementById('adminOrdersList');
-            document.getElementById('orderCountBadge').innerText = orders.length;
-            list.innerHTML = '';
-
-            if (orders.length === 0) {
-                list.innerHTML = `<p class="text-center text-gray-500 py-6 text-xs">No orders received yet.</p>`;
-                return;
-            }
-
-            orders.forEach((ord, index) => {
-                let itemsListHtml = ord.items.map(i => `<li>${i.name} (${i.price}) x ${i.qty}</li>`).join('');
-                list.innerHTML += `
-                    <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 text-xs space-y-2">
-                        <div class="flex justify-between items-center border-b pb-1">
-                            <span class="font-bold text-indigo-900">Order #${ord.id}</span>
-                            <span class="text-gray-500">${ord.date}</span>
-                        </div>
-                        <p><strong>Customer:</strong> ${ord.name} (WhatsApp: ${ord.phone})</p>
-                        <p><strong>Address:</strong> ${ord.address}</p>
-                        <div>
-                            <strong>Ordered Items:</strong>
-                            <ul class="list-disc pl-5 text-gray-600 mt-1">${itemsListHtml}</ul>
-                        </div>
-                        <div class="flex justify-end pt-2">
-                            <button onclick="deleteOrder(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg font-bold">Remove Order</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function deleteOrder(index) {
-            orders.splice(index, 1);
-            localStorage.setItem('am_toys_orders', JSON.stringify(orders));
-            renderAdminOrders();
-        }
-
-        function clearAllOrders() {
-            if (confirm("Are you sure you want to clear all orders?")) {
-                orders = [];
-                localStorage.setItem('am_toys_orders', JSON.stringify(orders));
-                renderAdminOrders();
-            }
+            alert("Order Success! WhatsApp par order details bhej di gayi hain.");
         }
     </script>
 
