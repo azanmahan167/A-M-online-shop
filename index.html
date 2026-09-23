@@ -40,6 +40,10 @@
                 <button onclick="openAdminLogin()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-1 cursor-pointer">
                     <span>⚙️ Admin Panel</span>
                 </button>
+                <!-- No Return Policy Button (Same Size) -->
+                <button onclick="openPolicyModal()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-1 cursor-pointer">
+                    <span>🛡️ No Return Policy</span>
+                </button>
                 <!-- Cart Button with Badge -->
                 <button onclick="openCartModal()" class="relative bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-2 cursor-pointer">
                     <span>🛍️ Cart</span>
@@ -109,6 +113,23 @@
         <p class="text-emerald-400 font-bold">WhatsApp Helpline (Only): 0313 7221362</p>
     </footer>
 
+    <!-- NO RETURN POLICY MODAL -->
+    <div id="policyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-6 relative border border-gray-100 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h2 class="text-lg font-extrabold text-indigo-900">🛡️ No Return Policy</h2>
+                <button onclick="closePolicyModal()" class="text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            </div>
+            <div class="text-xs md:text-sm text-gray-700 space-y-2">
+                <p>Hamari store ki <strong>No Return Policy</strong> hai. Ek dafa order confirm hone ya deliver hone ke baad item return ya exchange nahi kiya jata.</p>
+                <p>Baraye meharbani order place karne se pehle product details achi tarah check kar lein. Shukriya!</p>
+            </div>
+            <button onclick="closePolicyModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition shadow text-xs">
+                Samajh aa gayi / Close
+            </button>
+        </div>
+    </div>
+
     <!-- ADMIN MODAL -->
     <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative border border-gray-100">
@@ -167,13 +188,14 @@
                 <div id="cartItemsList" class="space-y-3 mb-4"></div>
             </div>
 
-            <div class="border-t pt-4 sticky bottom-0 bg-white">
-                <div class="flex justify-between items-center mb-4">
+            <div class="border-t pt-4 sticky bottom-0 bg-white space-y-3">
+                <div class="flex justify-between items-center">
                     <span class="font-bold text-gray-700 text-sm">Total Bill:</span>
                     <span id="cartTotalPrice" class="font-extrabold text-indigo-900 text-xl">Rs 0</span>
                 </div>
+                <!-- Cart modal button says "Order" -->
                 <button onclick="openCheckoutModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs md:text-sm transition shadow-lg cursor-pointer flex items-center justify-center space-x-2">
-                    <span>🚀 Proceed to Checkout</span>
+                    <span>📦 Order</span>
                 </button>
             </div>
         </div>
@@ -186,24 +208,28 @@
                 <h2 class="text-lg font-extrabold text-indigo-900">📝 Complete Your Order</h2>
                 <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
             </div>
-            <form id="checkoutForm" onsubmit="submitOrder(event)" class="space-y-3 text-xs md:text-sm">
+            <!-- Formspree form for email delivery -->
+            <form id="checkoutForm" action="https://formspree.io/f/mkjgongn" method="POST" onsubmit="submitOrderToFormspree(event)" class="space-y-3 text-xs md:text-sm">
+                <!-- Hidden input to store cart details for Formspree email -->
+                <input type="hidden" id="formspreeOrderDetails" name="order_details" value="">
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">Full Name:</label>
-                    <input type="text" id="custName" required placeholder="Aap ka Naam..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
+                    <input type="text" id="custName" name="name" required placeholder="Aap ka Naam..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">WhatsApp Phone Number:</label>
-                    <input type="tel" id="custPhone" required placeholder="03137221362..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
+                    <input type="tel" id="custPhone" name="phone" required placeholder="03137221362..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">Delivery Address:</label>
-                    <textarea id="custAddress" rows="3" required placeholder="Street, House No, City..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500"></textarea>
+                    <textarea id="custAddress" name="address" rows="3" required placeholder="Street, House No, City..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
                 <div class="p-3 bg-indigo-50 rounded-xl text-xs text-indigo-900 font-semibold">
                     Payment Method: <strong>Cash on Delivery (COD)</strong>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-md cursor-pointer">
-                    Confirm & Place Order 📦
+                <!-- Checkout bottom button says "Order" -->
+                <button type="submit" id="checkoutSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-md cursor-pointer">
+                    Order 🚀
                 </button>
             </form>
         </div>
@@ -285,6 +311,15 @@
             let query = document.getElementById('searchInput').value.toLowerCase();
             let filtered = products.filter(p => p.name.toLowerCase().includes(query));
             renderProducts(filtered);
+        }
+
+        // Policy Modal Functions
+        function openPolicyModal() {
+            document.getElementById('policyModal').classList.remove('hidden');
+        }
+
+        function closePolicyModal() {
+            document.getElementById('policyModal').classList.add('hidden');
         }
 
         // Admin Panel Functions
@@ -503,24 +538,26 @@
             document.getElementById('checkoutModal').classList.add('hidden');
         }
 
-        function submitOrder(e) {
-            e.preventDefault();
-            let name = document.getElementById('custName').value;
-            let phone = document.getElementById('custPhone').value;
-            let address = document.getElementById('custAddress').value;
-
-            let orderText = `*New Order Placed!*%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A%0A*Items:*%0A`;
+        function submitOrderToFormspree(e) {
+            // Let the form submit normally to Formspree, but pack order details into the hidden field first
+            let orderSummary = "Items Ordered:\n";
+            let total = 0;
             cart.forEach(i => {
-                orderText += `- ${i.name} (${i.price}) x ${i.qty}%0A`;
+                let numPrice = parseInt(i.price.replace(/[^0-9]/g, '')) || 0;
+                orderSummary += `- ${i.name} (${i.price}) x ${i.qty} = Rs ${numPrice * i.qty}\n`;
+                total += numPrice * i.qty;
             });
+            orderSummary += `Total Bill: Rs ${total}`;
 
-            let whatsappUrl = `https://wa.me/923137221362?text=${orderText}`;
-            window.open(whatsappUrl, '_blank');
-
-            cart = [];
-            saveAndRefreshCart();
-            closeCheckoutModal();
-            alert("Order Success! WhatsApp par order details bhej di gayi hain.");
+            document.getElementById('formspreeOrderDetails').value = orderSummary;
+            
+            // Clear cart after short timeout to allow Formspree submission
+            setTimeout(() => {
+                cart = [];
+                saveAndRefreshCart();
+                closeCheckoutModal();
+                alert("Order successfully placed and sent to your email!");
+            }, 1000);
         }
     </script>
 </body>
