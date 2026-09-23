@@ -90,16 +90,16 @@
         <div class="glass-card rounded-3xl p-6 md:p-8 shadow-xl max-w-xl mx-auto border border-white/20 space-y-4">
             <h3 class="font-extrabold text-indigo-900 text-lg">✉️ Send Message / Feedback</h3>
             <p class="text-xs text-gray-600">Agar aapko koi sawal poochna ho toh message bhejein.</p>
-            <form action="https://formspree.io/f/mkjgongn" method="POST" class="space-y-3 text-xs md:text-sm">
+            <form onsubmit="submitFeedbackToFirebase(event)" class="space-y-3 text-xs md:text-sm">
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">Aap ka Naam:</label>
-                    <input type="text" name="name" required placeholder="Naam likhein..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
+                    <input type="text" id="feedbackName" required placeholder="Naam likhein..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">Aap ka Message:</label>
-                    <textarea name="message" rows="3" required placeholder="Apna message yahan likhein..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500"></textarea>
+                    <textarea id="feedbackText" rows="3" required placeholder="Apna message yahan likhein..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow cursor-pointer">
+                <button type="submit" id="feedbackBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow cursor-pointer">
                     Message Bhejein 🚀
                 </button>
             </form>
@@ -132,7 +132,7 @@
 
     <!-- ADMIN MODAL -->
     <div id="adminModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative border border-gray-100">
+        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative border border-gray-100">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
                 <h2 class="text-lg font-extrabold text-indigo-900">⚙️ Firebase Cloud Admin Panel</h2>
                 <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
@@ -146,33 +146,57 @@
             </div>
 
             <!-- Add Toy Form (Hidden initially) -->
-            <div id="adminDashboard" class="hidden space-y-4 text-xs">
-                <div class="p-3 bg-emerald-50 text-emerald-800 font-semibold rounded-xl">
-                    ✅ Admin Logged In! (Firebase Firestore Connected)
+            <div id="adminDashboard" class="hidden space-y-6 text-xs">
+                <div class="p-3 bg-emerald-50 text-emerald-800 font-semibold rounded-xl flex justify-between items-center">
+                    <span>✅ Admin Logged In! (Firebase Firestore Connected)</span>
+                    <button onclick="switchAdminTab('orders')" id="tabOrdersBtn" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-bold">📦 Manage Orders</button>
+                    <button onclick="switchAdminTab('products')" id="tabProdsBtn" class="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg font-bold">🧸 Manage Toys</button>
+                    <button onclick="switchAdminTab('messages')" id="tabMsgsBtn" class="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg font-bold">✉️ Messages & Feedback</button>
                 </div>
-                <h3 class="font-extrabold text-gray-800 text-sm">Add New Toy to Firebase</h3>
-                <form onsubmit="addNewToyToFirebase(event)" class="space-y-3">
-                    <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Toy Name:</label>
-                        <input type="text" id="newToyName" required placeholder="Jaise: Remote Car..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Price (e.g. Rs 500):</label>
-                        <input type="text" id="newToyPrice" required placeholder="Rs 500" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Upload Toy Image (Select File):</label>
-                        <input type="file" id="newToyFile" accept="image/*" required class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-                    </div>
-                    <button type="submit" id="saveToyBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow cursor-pointer">
-                        Save & Publish to Firebase 🚀
-                    </button>
-                </form>
 
-                <div class="border-t pt-4 mt-4">
-                    <h4 class="font-extrabold text-gray-800 mb-2">Manage Existing Toys</h4>
-                    <div id="adminProductList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                <!-- ORDERS MANAGEMENT TAB -->
+                <div id="adminOrdersSection" class="space-y-3">
+                    <h3 class="font-extrabold text-gray-800 text-sm">Customer Orders & Address Management</h3>
+                    <div id="adminOrdersList" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                        <p class="text-gray-500">Loading orders...</p>
+                    </div>
                 </div>
+
+                <!-- PRODUCTS MANAGEMENT TAB -->
+                <div id="adminProductsSection" class="space-y-4 hidden">
+                    <h3 class="font-extrabold text-gray-800 text-sm">Add New Toy to Firebase</h3>
+                    <form onsubmit="addNewToyToFirebase(event)" class="space-y-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Toy Name:</label>
+                            <input type="text" id="newToyName" required placeholder="Jaise: Remote Car..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Price (e.g. Rs 500):</label>
+                            <input type="text" id="newToyPrice" required placeholder="Rs 500" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Upload Toy Image (Select File):</label>
+                            <input type="file" id="newToyFile" accept="image/*" required class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                        </div>
+                        <button type="submit" id="saveToyBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow cursor-pointer">
+                            Save & Publish to Firebase 🚀
+                        </button>
+                    </form>
+
+                    <div class="border-t pt-4 mt-4">
+                        <h4 class="font-extrabold text-gray-800 mb-2">Manage Existing Toys</h4>
+                        <div id="adminProductList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- MESSAGES & FEEDBACK TAB -->
+                <div id="adminMessagesSection" class="space-y-3 hidden">
+                    <h3 class="font-extrabold text-gray-800 text-sm">Client Messages & Feedback</h3>
+                    <div id="adminMessagesList" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                        <p class="text-gray-500">Loading messages...</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -209,20 +233,18 @@
                 <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
             </div>
             <!-- Formspree form for email delivery -->
-            <form id="checkoutForm" action="https://formspree.io/f/mkjgongn" method="POST" onsubmit="submitOrderToFormspree(event)" class="space-y-3 text-xs md:text-sm">
-                <!-- Hidden input to store cart details for Formspree email -->
-                <input type="hidden" id="formspreeOrderDetails" name="order_details" value="">
+            <form id="checkoutForm" onsubmit="submitOrderToFirebase(event)" class="space-y-3 text-xs md:text-sm">
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">Full Name:</label>
-                    <input type="text" id="custName" name="name" required placeholder="Aap ka Naam..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
+                    <input type="text" id="custName" required placeholder="Aap ka Naam..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">WhatsApp Phone Number:</label>
-                    <input type="tel" id="custPhone" name="phone" required placeholder="03137221362..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
+                    <input type="tel" id="custPhone" required placeholder="03137221362..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">Delivery Address:</label>
-                    <textarea id="custAddress" name="address" rows="3" required placeholder="Street, House No, City..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500"></textarea>
+                    <textarea id="custAddress" rows="3" required placeholder="Street, House No, City..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
                 <div class="p-3 bg-indigo-50 rounded-xl text-xs text-indigo-900 font-semibold">
                     Payment Method: <strong>Cash on Delivery (COD)</strong>
@@ -253,14 +275,18 @@
         const db = firebase.firestore();
 
         let products = [];
+        let orders = [];
+        let messages = [];
         let cart = JSON.parse(localStorage.getItem('am_toys_cart')) || [];
 
         window.onload = function() {
             listenToFirebaseProducts();
+            listenToFirebaseOrders();
+            listenToFirebaseMessages();
             updateCartBadge();
         };
 
-        // Real-Time Firebase Listener
+        // Real-Time Firebase Listener for Products
         function listenToFirebaseProducts() {
             db.collection("toys").orderBy("createdAt", "desc").onSnapshot(snapshot => {
                 products = [];
@@ -272,6 +298,32 @@
             }, err => {
                 console.error("Firebase fetch error:", err);
                 document.getElementById('productGrid').innerHTML = `<p class="col-span-full text-center text-red-300 text-sm py-10">Error connecting to Firebase! Please check Database Rules.</p>`;
+            });
+        }
+
+        // Real-Time Firebase Listener for Orders
+        function listenToFirebaseOrders() {
+            db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                orders = [];
+                snapshot.forEach(doc => {
+                    orders.push({ id: doc.id, ...doc.data() });
+                });
+                renderAdminOrders();
+            }, err => {
+                console.error("Orders fetch error:", err);
+            });
+        }
+
+        // Real-Time Firebase Listener for Messages & Feedback
+        function listenToFirebaseMessages() {
+            db.collection("messages").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                messages = [];
+                snapshot.forEach(doc => {
+                    messages.push({ id: doc.id, ...doc.data() });
+                });
+                renderAdminMessages();
+            }, err => {
+                console.error("Messages fetch error:", err);
             });
         }
 
@@ -340,8 +392,152 @@
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
                 renderAdminProductList();
+                renderAdminOrders();
+                renderAdminMessages();
             } else {
                 alert("Ghalat Password! Dobara koshish karein.");
+            }
+        }
+
+        function switchAdminTab(tab) {
+            const ordSec = document.getElementById('adminOrdersSection');
+            const prodSec = document.getElementById('adminProductsSection');
+            const msgSec = document.getElementById('adminMessagesSection');
+            
+            const ordBtn = document.getElementById('tabOrdersBtn');
+            const prodBtn = document.getElementById('tabProdsBtn');
+            const msgBtn = document.getElementById('tabMsgsBtn');
+
+            ordSec.classList.add('hidden');
+            prodSec.classList.add('hidden');
+            msgSec.classList.add('hidden');
+
+            ordBtn.className = "bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg font-bold";
+            prodBtn.className = "bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg font-bold";
+            msgBtn.className = "bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg font-bold";
+
+            if (tab === 'orders') {
+                ordSec.classList.remove('hidden');
+                ordBtn.className = "bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-bold";
+            } else if (tab === 'products') {
+                prodSec.classList.remove('hidden');
+                prodBtn.className = "bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-bold";
+            } else if (tab === 'messages') {
+                msgSec.classList.remove('hidden');
+                msgBtn.className = "bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-bold";
+            }
+        }
+
+        function renderAdminOrders() {
+            let list = document.getElementById('adminOrdersList');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (orders.length === 0) {
+                list.innerHTML = `<p class="text-gray-500 text-xs py-4 text-center">No orders received yet.</p>`;
+                return;
+            }
+
+            orders.forEach(order => {
+                let statusColor = 'bg-amber-100 text-amber-800';
+                if (order.status === 'Confirmed') statusColor = 'bg-blue-100 text-blue-800';
+                if (order.status === 'Shipped') statusColor = 'bg-purple-100 text-purple-800';
+                if (order.status === 'Delivered') statusColor = 'bg-emerald-100 text-emerald-800';
+                if (order.status === 'Cancelled') statusColor = 'bg-red-100 text-red-800';
+
+                let itemsHtml = '';
+                if (order.items && Array.isArray(order.items)) {
+                    order.items.forEach(i => {
+                        itemsHtml += `<li class="text-gray-600">• ${i.name} (${i.price}) x ${i.qty}</li>`;
+                    });
+                }
+
+                list.innerHTML += `
+                    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-extrabold text-gray-900 text-sm">👤 ${order.name}</h4>
+                                <p class="text-gray-600 text-xs">📞 Phone: <a href="tel:${order.phone}" class="text-indigo-600 font-bold">${order.phone}</a></p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${statusColor}">${order.status || 'Pending'}</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-gray-100 text-xs space-y-1">
+                            <p class="font-bold text-gray-700">📍 Delivery Address:</p>
+                            <p class="text-gray-600">${order.address}</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-gray-100 text-xs space-y-1">
+                            <p class="font-bold text-gray-700">🛒 Ordered Items:</p>
+                            <ul class="pl-3">${itemsHtml}</ul>
+                            <p class="font-extrabold text-indigo-900 mt-1">Total Bill: Rs ${order.totalAmount || 0}</p>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-200">
+                            <div class="flex items-center space-x-1">
+                                <span class="text-[10px] font-bold text-gray-500">Update Status:</span>
+                                <select onchange="updateOrderStatus('${order.id}', this.value)" class="text-[11px] font-bold bg-white border border-gray-300 rounded-lg px-2 py-1 focus:outline-none">
+                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Confirmed" ${order.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="https://wa.me/92${order.phone.replace(/^0+/, '')}?text=Hello%20${encodeURIComponent(order.name)},%20Aapka%20order%20A&M%20Online%20Store%20sa%20confirm%20ho%20gaya%20hai!" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1">
+                                    <span>💬 WhatsApp</span>
+                                </a>
+                                <button onclick="deleteFirebaseOrder('${order.id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            db.collection("orders").doc(orderId).update({
+                status: newStatus
+            }).then(() => {
+                // Success
+            }).catch(err => {
+                alert("Error updating status: " + err.message);
+            });
+        }
+
+        function deleteFirebaseOrder(orderId) {
+            if (confirm("Kya aap waqai is order ko delete karna chahte hain?")) {
+                db.collection("orders").doc(orderId).delete().catch(err => alert("Error: " + err.message));
+            }
+        }
+
+        function renderAdminMessages() {
+            let list = document.getElementById('adminMessagesList');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (messages.length === 0) {
+                list.innerHTML = `<p class="text-gray-500 text-xs py-4 text-center">No messages or feedback received yet.</p>`;
+                return;
+            }
+
+            messages.forEach(msg => {
+                list.innerHTML += `
+                    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-extrabold text-gray-900 text-sm">👤 ${msg.name}</h4>
+                            <span class="text-[10px] text-gray-400">${msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleString() : ''}</span>
+                        </div>
+                        <p class="text-gray-700 bg-white p-3 rounded-xl border border-gray-100 text-xs">"${msg.message}"</p>
+                        <div class="flex justify-end">
+                            <button onclick="deleteFirebaseMessage('${msg.id}')" class="bg-red-500 hover:bg-red-600 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteFirebaseMessage(msgId) {
+            if (confirm("Kya aap is message ko delete karna chahte hain?")) {
+                db.collection("messages").doc(msgId).delete().catch(err => alert("Error: " + err.message));
             }
         }
 
@@ -538,27 +734,85 @@
             document.getElementById('checkoutModal').classList.add('hidden');
         }
 
-        function submitOrderToFormspree(e) {
-            // Let the form submit normally to Formspree, but pack order details into the hidden field first
-            let orderSummary = "Items Ordered:\n";
-            let total = 0;
-            cart.forEach(i => {
-                let numPrice = parseInt(i.price.replace(/[^0-9]/g, '')) || 0;
-                orderSummary += `- ${i.name} (${i.price}) x ${i.qty} = Rs ${numPrice * i.qty}\n`;
-                total += numPrice * i.qty;
-            });
-            orderSummary += `Total Bill: Rs ${total}`;
+        // Submit Feedback / Message to Firebase
+        function submitFeedbackToFirebase(e) {
+            e.preventDefault();
+            let name = document.getElementById('feedbackName').value;
+            let message = document.getElementById('feedbackText').value;
+            let btn = document.getElementById('feedbackBtn');
 
-            document.getElementById('formspreeOrderDetails').value = orderSummary;
-            
-            // Clear cart after short timeout to allow Formspree submission
-            setTimeout(() => {
+            btn.innerText = "Bhej rahe hain...";
+            btn.disabled = true;
+
+            db.collection("messages").add({
+                name: name,
+                message: message,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                btn.innerText = "Message Bhejein 🚀";
+                btn.disabled = false;
+                document.getElementById('feedbackName').value = '';
+                document.getElementById('feedbackText').value = '';
+                alert("Aapka message kamyabi se bhej diya gaya hai!");
+            }).catch(err => {
+                btn.innerText = "Message Bhejein 🚀";
+                btn.disabled = false;
+                alert("Error: " + err.message);
+            });
+        }
+
+        // Submit Order to Firebase Orders Collection
+        function submitOrderToFirebase(e) {
+            e.preventDefault();
+            let name = document.getElementById('custName').value;
+            let phone = document.getElementById('custPhone').value;
+            let address = document.getElementById('custAddress').value;
+            let btn = document.getElementById('checkoutSubmitBtn');
+
+            if (cart.length === 0) {
+                alert("Cart is empty!");
+                return;
+            }
+
+            let total = 0;
+            let orderItems = cart.map(i => {
+                let numPrice = parseInt(i.price.replace(/[^0-9]/g, '')) || 0;
+                total += numPrice * i.qty;
+                return {
+                    name: i.name,
+                    price: i.price,
+                    qty: i.qty
+                };
+            });
+
+            btn.innerText = "Order Place ho raha hai...";
+            btn.disabled = true;
+
+            db.collection("orders").add({
+                name: name,
+                phone: phone,
+                address: address,
+                items: orderItems,
+                totalAmount: total,
+                status: "Pending",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                btn.innerText = "Order 🚀";
+                btn.disabled = false;
                 cart = [];
                 saveAndRefreshCart();
                 closeCheckoutModal();
-                alert("Order successfully placed and sent to your email!");
-            }, 1000);
+                document.getElementById('custName').value = '';
+                document.getElementById('custPhone').value = '';
+                document.getElementById('custAddress').value = '';
+                alert("Aapka order kamyabi se place ho gaya hai!");
+            }).catch(err => {
+                btn.innerText = "Order 🚀";
+                btn.disabled = false;
+                alert("Order error: " + err.message);
+            });
         }
     </script>
 </body>
 </html>
+```[cite: 1]
