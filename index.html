@@ -38,7 +38,7 @@
             bottom: 95px;
             right: 25px;
             width: 350px;
-            height: 450px;
+            height: 480px;
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
@@ -80,8 +80,8 @@
         .ai-msg {
             padding: 10px 14px;
             border-radius: 10px;
-            max-width: 80%;
-            font-size: 14px;
+            max-width: 85%;
+            font-size: 13px;
             line-height: 1.4;
         }
         .user-message {
@@ -109,7 +109,7 @@
             border: 1px solid #d1d5db;
             border-radius: 8px;
             outline: none;
-            font-size: 14px;
+            font-size: 13px;
         }
         #ai-user-input:focus { border-color: #4f46e5; }
         #ai-send-btn {
@@ -121,7 +121,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
         }
         #ai-send-btn:hover { background: #4338ca; }
     </style>
@@ -227,16 +227,16 @@
         <p class="text-emerald-400 font-bold">WhatsApp Helpline (Only): 0313 7221362</p>
     </footer>
 
-    <!-- AI CHATBOT FLOATING BUTTON & WINDOW -->
+    <!-- STRICT SMART STORE AI GUIDE CHATBOT -->
     <button id="ai-chat-btn" onclick="toggleChat()">💬</button>
 
     <div id="ai-chat-box">
         <div id="ai-chat-header">
-            <span>A&M Store AI Guide</span>
+            <span>A&M Store Expert Guide 🤖</span>
             <button id="ai-close-btn" onclick="toggleChat()">✕</button>
         </div>
         <div id="ai-chat-messages">
-            <div class="ai-msg ai-message">Hello! Main A&M Online Store ka AI guide hoon. Aapko toys ya order karne mein kya madad chahiye?</div>
+            <div class="ai-msg ai-message">Hello! Main A&M Online Store ka AI Guide hoon. Aapko kya maloom karna hai?</div>
         </div>
         <div id="ai-chat-input-area">
             <input type="text" id="ai-user-input" placeholder="Yahan sawal likhein..." onkeypress="handleKeyPress(event)">
@@ -270,7 +270,7 @@
             </div>
 
             <div id="adminLoginForm" class="space-y-3 text-xs">
-                <p class="text-gray-600">Admin panel access karne ke liye password dalein</p>
+                <p class="text-gray-600">Admin panel access karne ke liye password dalein (Password: <strong>0101</strong>)</p>
                 <input type="password" id="adminPassInput" placeholder="Enter Password..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-500">
                 <button onclick="verifyAdmin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition shadow">Login</button>
             </div>
@@ -381,9 +381,7 @@
 
     <!-- JavaScript Application Engine -->
     <script>
-        // AI Chatbot Logic (Groq API) with CORS Proxy Fix
-        const GROQ_API_KEY = "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";
-
+        // STRICT SINGLE-QUESTION TARGETED CHATBOT LOGIC
         function toggleChat() {
             const chatBox = document.getElementById("ai-chat-box");
             chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
@@ -395,50 +393,64 @@
             }
         }
 
-        async function sendMessage() {
+        function sendMessage() {
             const inputField = document.getElementById("ai-user-input");
-            const messageText = inputField.value.trim();
+            const rawText = inputField.value.trim();
+            const messageText = rawText.toLowerCase();
             if (!messageText) return;
 
             const messagesContainer = document.getElementById("ai-chat-messages");
 
-            messagesContainer.innerHTML += `<div class="ai-msg user-message">${messageText}</div>`;
+            messagesContainer.innerHTML += `<div class="ai-msg user-message">${rawText}</div>`;
             inputField.value = "";
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            const loadingId = "loading-" + Date.now();
-            messagesContainer.innerHTML += `<div id="${loadingId}" class="ai-msg ai-message">Soch raha hai...</div>`;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            setTimeout(() => {
+                let reply = "";
 
-            try {
-                // Using CORS proxy to allow local file requests without blocking
-                const response = await fetch("https://corsproxy.io/?https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${GROQ_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
-                        messages: [
-                            { role: "system", content: "You are a helpful AI guide for A&M Online Store (Toys & Fun). Help users find toys, answer questions about orders or no-return policy clearly in Roman Urdu or English." },
-                            { role: "user", content: messageText }
-                        ]
-                    })
-                });
+                // 1. Password Inquiry
+                if (messageText.includes("password") || messageText.includes("admin code") || messageText.includes("pin")) {
+                    reply = "Mujhe admin panel ka password nahi pata.";
+                }
+                // 2. Order Process Inquiry
+                else if (messageText.includes("order") || messageText.includes("kaise kera") || messageText.includes("kese karein") || messageText.includes("kharidna")) {
+                    reply = "Toy ke neche 'Add to Cart' dabayein, phir Cart mein ja kar 'Order' par click karein aur details bhar kar confirm karein.";
+                } 
+                // 3. Usage Inquiry
+                else if (messageText.includes("use") || messageText.includes("kese use") || messageText.includes("kaise use")) {
+                    reply = "Toy ka box kholein, batteries dalein (agar required hon) aur istemal karein.";
+                } 
+                // 4. Policy Inquiry
+                else if (messageText.includes("policy") || messageText.includes("return") || messageText.includes("wapas")) {
+                    reply = "Hamari No Return Policy hai; item wapas ya exchange nahi hota.";
+                } 
+                // 5. Helpline Inquiry
+                else if (messageText.includes("contact") || messageText.includes("number") || messageText.includes("whatsapp") || messageText.includes("helpline")) {
+                    reply = "WhatsApp Helpline: <a href='https://wa.me/923137221362' class='underline font-bold text-indigo-600' target='_blank'>0313 7221362</a>";
+                }
+                else {
+                    // Check specific product match from Firebase
+                    let matchedProduct = products.find(p => messageText.includes(p.name.toLowerCase()));
+                    
+                    if (matchedProduct) {
+                        reply = `${matchedProduct.name} ki qeemat ${matchedProduct.price} hai. Yeh 3 saal ya us se baray bacho ke liye hai.`;
+                    } 
+                    // General Toys/New Toys/Recommendations Inquiry
+                    else if (messageText.includes("toy") || messageText.includes("recommend") || messageText.includes("age") || messageText.includes("saal") || messageText.includes("konsa") || messageText.includes("best") || messageText.includes("naya") || messageText.includes("new")) {
+                        if (products && products.length > 0) {
+                            let prodListStr = products.map(p => `${p.name} (${p.price})`).join(", ");
+                            reply = `Available toys: ${prodListStr}. Yeh sab 3 se 12 saal ke bacho ke liye hain.`;
+                        } else {
+                            reply = "Filhal koi toy available nahi hai.";
+                        }
+                    } else {
+                        reply = "Maafi chahta hoon, iska jawab mere paas nahi hai.";
+                    }
+                }
 
-                const data = await response.json();
-                document.getElementById(loadingId).remove();
-
-                const aiReply = data.choices[0].message.content;
-                messagesContainer.innerHTML += `<div class="ai-msg ai-message">${aiReply}</div>`;
+                messagesContainer.innerHTML += `<div class="ai-msg ai-message">${reply}</div>`;
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            } catch (error) {
-                document.getElementById(loadingId).remove();
-                messagesContainer.innerHTML += `<div class="ai-msg ai-message">Maafi chahta hoon, kuch error aa gaya hai.</div>`;
-                console.error(error);
-            }
+            }, 300);
         }
 
         // Firebase Config & Store Logic
@@ -559,7 +571,7 @@
                 renderAdminOrders();
                 renderAdminMessages();
             } else {
-                alert("Ghalat Password! Dobara koshish karein.");
+                alert("Ghalat Password! Password '0101' hai.");
             }
         }
 
