@@ -99,6 +99,8 @@
             padding: 12px;
             background: white;
             border-top: 1px solid #e5e7eb;
+            gap: 6px;
+            align-items: center;
         }
         #ai-user-input {
             flex: 1;
@@ -108,16 +110,22 @@
             outline: none;
             font-size: 13px;
         }
-        #ai-send-btn {
+        #ai-send-btn, #ai-train-btn {
             background: #4f46e5;
             color: white;
             border: none;
-            padding: 0 16px;
-            margin-left: 8px;
+            padding: 10px 12px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        #ai-train-btn {
+            background: #059669;
+        }
+        #ai-train-btn:hover {
+            background: #047857;
         }
 
         /* Loading Skeleton */
@@ -134,6 +142,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Google Gen AI SDK -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.run/@google/genai"
+        }
+      }
+    </script>
 </head>
 <body class="bg-slate-900 text-gray-800 min-h-screen">
 
@@ -332,7 +348,7 @@
         </div>
     </footer>
 
-    <!-- FIREBASE DIRECT CONNECTED SMART AI CHATBOT -->
+    <!-- GEMINI API CONNECTED SMART AI CHATBOT -->
     <button id="ai-chat-btn" onclick="toggleChat()">💬</button>
 
     <div id="ai-chat-box">
@@ -344,7 +360,8 @@
             <div class="ai-msg ai-message">Assalam-o-Alaikum! 🧸 Main A&M Store ka Smart AI Assistant hoon. Order karne ka tariqa, prices, ya koi bhi item yahan poochein!</div>
         </div>
         <div id="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="Sawal likhein... (e.g. Order kaise karein?)" onkeypress="if(event.key === 'Enter') sendMessage()">
+            <input type="text" id="ai-user-input" placeholder="Sawal likhein..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button id="ai-train-btn" onclick="promptTrainBot()">Train 🧠</button>
             <button id="ai-send-btn" onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -546,7 +563,12 @@
     </div>
 
     <!-- JAVASCRIPT APPLICATION LOGIC -->
-    <script>
+    <script type="module">
+        import { GoogleGenAI } from "@google/genai";
+
+        // GEMINI API INITIALIZATION
+        const ai = new GoogleGenAI({ apiKey: "AIzaSyD02RIDSG86_ZF1Ea5hLRkceEG1RDqTUcM" });
+
         // FIREBASE INITIALIZATION
         const firebaseConfig = {
             apiKey: "AIzaSyD02RIDSG86_ZF1Ea5hLRkceEG1RDqTUcM",
@@ -569,17 +591,19 @@
         let wishlist = JSON.parse(localStorage.getItem('am_wishlist_items')) || [];
         let deliveryFee = 200;
         let activeTabCategory = 'All';
+        let customTrainingData = '';
 
         window.onload = function() {
             listenToFirebaseProducts();
             listenToFirebaseOrders();
             listenToFirebaseMessages();
+            listenToFirebaseBotTraining();
             updateCartBadge();
             updateWishlistBadge();
         };
 
         // NAVIGATION CONTROL
-        function switchSection(sectionId) {
+        window.switchSection = function(sectionId) {
             document.getElementById('homeSection').classList.add('hidden');
             document.getElementById('wishlistSection').classList.add('hidden');
             
@@ -587,7 +611,7 @@
             if(sectionId === 'wishlistSection') renderWishlistGrid();
         }
 
-        function showToast(msg) {
+        window.showToast = function(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
             toast.classList.remove('translate-x-full');
@@ -629,8 +653,16 @@
             });
         }
 
+        function listenToFirebaseBotTraining() {
+            db.collection("settings").doc("botTraining").onSnapshot(doc => {
+                if (doc.exists) {
+                    customTrainingData = doc.data().instruction || '';
+                }
+            });
+        }
+
         // CUSTOMER MESSAGE SUBMISSION
-        function submitCustomerMessage(e) {
+        window.submitCustomerMessage = function(e) {
             e.preventDefault();
             let name = document.getElementById('visitorName').value;
             let msgText = document.getElementById('visitorMsgText').value;
@@ -649,7 +681,7 @@
         }
 
         // RENDER PRODUCTS & FILTERS
-        function applySearchAndFilters() {
+        window.applySearchAndFilters = function() {
             let searchQ = document.getElementById('searchInput').value.toLowerCase();
             let categoryQ = document.getElementById('filterCategory').value;
             let ageQ = document.getElementById('filterAge').value;
@@ -682,7 +714,7 @@
             renderProductsGrid(filtered);
         }
 
-        function setCategoryTab(tabName) {
+        window.setCategoryTab = function(tabName) {
             activeTabCategory = tabName;
             applySearchAndFilters();
         }
@@ -728,7 +760,7 @@
         }
 
         // PRODUCT DETAILS VIEW
-        function viewProductDetails(id) {
+        window.viewProductDetails = function(id) {
             let prod = products.find(p => p.id === id);
             if (!prod) return;
 
@@ -753,10 +785,10 @@
             `;
             document.getElementById('productDetailModal').classList.remove('hidden');
         }
-        function closeProductDetailModal() { document.getElementById('productDetailModal').classList.add('hidden'); }
+        window.closeProductDetailModal = function() { document.getElementById('productDetailModal').classList.add('hidden'); }
 
         // CART LOGIC
-        function addToCart(id) {
+        window.addToCart = function(id) {
             let prod = products.find(p => p.id === id);
             if (!prod) return;
             if (prod.stockStatus === "Out of Stock" || prod.stockAvailable === false) {
@@ -768,7 +800,7 @@
             showToast(`${prod.name} added to cart!`);
         }
 
-        function buyNow(id) {
+        window.buyNow = function(id) {
             addToCart(id);
             openCartModal();
         }
@@ -784,8 +816,8 @@
             document.getElementById('cartBadge').innerText = count;
         }
 
-        function openCartModal() { renderCartItems(); document.getElementById('cartModal').classList.remove('hidden'); }
-        function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
+        window.openCartModal = function() { renderCartItems(); document.getElementById('cartModal').classList.remove('hidden'); }
+        window.closeCartModal = function() { document.getElementById('cartModal').classList.add('hidden'); }
 
         function renderCartItems() {
             let list = document.getElementById('cartItemsList');
@@ -827,17 +859,17 @@
             document.getElementById('checkoutTotalVal').innerText = `Rs ${finalTotal.toLocaleString()}`;
         }
 
-        function changeQty(index, delta) {
+        window.changeQty = function(index, delta) {
             cart[index].qty += delta;
             if (cart[index].qty <= 0) cart.splice(index, 1);
             saveCart();
         }
 
-        function removeFromCart(index) { cart.splice(index, 1); saveCart(); }
-        function clearCart() { cart = []; saveCart(); }
+        window.removeFromCart = function(index) { cart.splice(index, 1); saveCart(); }
+        window.clearCart = function() { cart = []; saveCart(); }
 
         // WISHLIST LOGIC
-        function toggleWishlist(id) {
+        window.toggleWishlist = function(id) {
             let index = wishlist.findIndex(w => w.id === id);
             if (index > -1) {
                 wishlist.splice(index, 1);
@@ -874,14 +906,14 @@
         }
 
         // CHECKOUT & ORDERS
-        function openCheckoutModal() {
+        window.openCheckoutModal = function() {
             if (cart.length === 0) return showToast("Cart is empty!");
             closeCartModal();
             document.getElementById('checkoutModal').classList.remove('hidden');
         }
-        function closeCheckoutModal() { document.getElementById('checkoutModal').classList.add('hidden'); }
+        window.closeCheckoutModal = function() { document.getElementById('checkoutModal').classList.add('hidden'); }
 
-        function submitOrderToFirebase(e) {
+        window.submitOrderToFirebase = function(e) {
             e.preventDefault();
             let name = document.getElementById('custName').value;
             let phone = document.getElementById('custPhone').value;
@@ -913,17 +945,17 @@
         }
 
         // ADMIN LOGIC
-        function openAdminLogin() { document.getElementById('adminModal').classList.remove('hidden'); }
-        function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
+        window.openAdminLogin = function() { document.getElementById('adminModal').classList.remove('hidden'); }
+        window.closeAdminModal = function() { document.getElementById('adminModal').classList.add('hidden'); }
 
-        function verifyAdmin() {
+        window.verifyAdmin = function() {
             if (document.getElementById('adminPassInput').value === "0101") {
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
             } else showToast("Incorrect Password!");
         }
 
-        function switchAdminTab(tab) {
+        window.switchAdminTab = function(tab) {
             document.getElementById('admSectionOrders').classList.add('hidden');
             document.getElementById('admSectionProducts').classList.add('hidden');
             document.getElementById('admSectionMessages').classList.add('hidden');
@@ -1025,14 +1057,14 @@
             });
         }
 
-        function deleteMessage(id) {
+        window.deleteMessage = function(id) {
             db.collection("messages").doc(id).delete().then(() => showToast("Message deleted!"));
         }
 
-        function updateOrderStatus(id, val) { db.collection("orders").doc(id).update({ status: val }); }
-        function deleteOrder(id) { if(confirm("Delete Order?")) db.collection("orders").doc(id).delete(); }
+        window.updateOrderStatus = function(id, val) { db.collection("orders").doc(id).update({ status: val }); }
+        window.deleteOrder = function(id) { if(confirm("Delete Order?")) db.collection("orders").doc(id).delete(); }
 
-        function addNewProductToFirebase(e) {
+        window.addNewProductToFirebase = function(e) {
             e.preventDefault();
             let file = document.getElementById('newProdFile').files[0];
             if(!file) return;
@@ -1069,9 +1101,9 @@
             });
         }
 
-        function deleteProduct(id) { db.collection("toys").doc(id).delete(); }
+        window.deleteProduct = function(id) { db.collection("toys").doc(id).delete(); }
 
-        function saveDeliveryFee() {
+        window.saveDeliveryFee = function() {
             let val = parseInt(document.getElementById('settingDeliveryFee').value);
             if (!isNaN(val)) {
                 deliveryFee = val;
@@ -1080,13 +1112,33 @@
             }
         }
 
-        // --- SUPER-TRAINED SMART AI ASSISTANT ENGINE ---
-        function toggleChat() {
+        // --- TRAIN BOT FUNCTIONALITY (SAVED TO FIREBASE) ---
+        window.promptTrainBot = function() {
+            let pass = prompt("Enter Password:");
+            if (pass === "0101") {
+                let newInstruction = prompt("Enter custom training instructions or knowledge for the bot:", customTrainingData);
+                if (newInstruction !== null) {
+                    db.collection("settings").doc("botTraining").set({
+                        instruction: newInstruction
+                    }).then(() => {
+                        customTrainingData = newInstruction;
+                        showToast("Bot successfully trained & saved to Firebase cloud!");
+                    }).catch(err => {
+                        showToast("Firebase save error!");
+                    });
+                }
+            } else if (pass !== null) {
+                showToast("Incorrect Password!");
+            }
+        }
+
+        // --- GEMINI API POWERED SMART AI ASSISTANT ENGINE ---
+        window.toggleChat = function() {
             let box = document.getElementById('ai-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function sendMessage() {
+        window.sendMessage = async function() {
             let input = document.getElementById('ai-user-input');
             let text = input.value.trim();
             if(!text) return;
@@ -1094,121 +1146,66 @@
             container.innerHTML += `<div class="ai-msg user-message">${text}</div>`;
             input.value = '';
 
-            setTimeout(() => {
-                let reply = getSmartBotResponse(text);
-                container.innerHTML += `<div class="ai-msg ai-message">${reply}</div>`;
+            container.scrollTop = container.scrollHeight;
+
+            let loadingId = 'loading-' + Date.now();
+            container.innerHTML += `<div id="${loadingId}" class="ai-msg ai-message">Soch raha hoon... 🤖</div>`;
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                let productsContext = products.map(p => `- ${p.name}: Price: ${p.salePrice || p.price}, Category: ${p.category}, Stock: ${p.stockStatus || 'In Stock'}, Age: ${p.ageRecommendation}, Description: ${p.description || 'N/A'}`).join('\n');
+                
+                let systemInstruction = `You are the official Smart AI Assistant for "A&M Online Store", a toy and e-commerce platform in Pakistan. 
+                You have complete real-time information about all products added to the store inventory database.
+                You help customers with store policies, finding toys, checking exact prices, stock availability, cart status, delivery charges (Rs ${deliveryFee}), and ordering steps via Cash on Delivery (COD).
+                Store Return Policy: Strict No-Return policy, except if an unboxing video proving damage or wrong item is provided.
+                Contact: WhatsApp 0313 7221362.
+                Current Cart Items Count: ${cart.length}.
+                Complete Products Database Information:
+                ${productsContext}
+                
+                Additional Custom Training Instructions provided by admin (stored securely on Firebase Cloud):
+                ${customTrainingData}
+                
+                Keep your answers helpful, polite, concise, and formatted nicely with emojis. Speak in Urdu/Roman Urdu if the user asks in Urdu/Roman Urdu, or match their language.`;
+
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: text,
+                    config: {
+                        systemInstruction: systemInstruction,
+                        temperature: 0.7,
+                    }
+                });
+
+                let botReply = response.text || "Main A&M Store ka Smart AI Assistant hoon! Aap mujh se order karne ka tariqa ya toys ke baray mein pooch sakte hain.";
+                
+                document.getElementById(loadingId).remove();
+                container.innerHTML += `<div class="ai-msg ai-message">${botReply}</div>`;
                 container.scrollTop = container.scrollHeight;
-            }, 300);
+
+            } catch (err) {
+                console.error("Gemini API Error:", err);
+                document.getElementById(loadingId).remove();
+                
+                let fallbackReply = getLocalSmartBotResponse(text);
+                container.innerHTML += `<div class="ai-msg ai-message">${fallbackReply}</div>`;
+                container.scrollTop = container.scrollHeight;
+            }
         }
 
-        function getSmartBotResponse(query) {
+        function getLocalSmartBotResponse(query) {
             let q = query.toLowerCase();
-
-            // 1. Store Introduction & Owner/Branding Info
-            if (q.includes('store') || q.includes('about') || q.includes('kya hai') || q.includes('company') || q.includes('platform')) {
-                return "🧸 A&M Online Store Pakistan ka behtareen Toys & Fun Headquarters hai! Yahan bachon ke liye high-quality toys, action figures, board games, aur educational toys milte hain with Cash on Delivery across Pakistan.";
+            if (q.includes('order') || q.includes('tariqa')) {
+                return "🛍️ Order Karne Ka Tariqa: Add to Cart karein, Cart icon par click karke Proceed to Checkout dabayein, apni details likhein aur Place Order Now par click kar dein! (COD available)";
             }
-
-            // 2. Order Process Instructions
-            if (q.includes('order kaise') || q.includes('order ka tariqa') || q.includes('order karne ka tariqa') || q.includes('buy kaise') || q.includes('kharidne ka tariqa') || q.includes('karein order') || q.includes('how to buy')) {
-                return "🛍️ Order Karne Ka Tariqa Aasan Hai:\n1. Apni pasand ke toy par 'Add to Cart' ya 'Buy Now' click karein.\n2. Top right par Cart 🛒 icon par click karein.\n3. 'Proceed to Checkout' button dabayein.\n4. Apna Name, Phone, City aur Delivery Address likhein.\n5. 'Place Order Now' par click kar dein!\n\nAap ka order Cash on Delivery (COD) par confirm ho jayega!";
+            if (q.includes('return') || q.includes('policy')) {
+                return "🔄 Return Policy: Strict No-Return policy hai, lekin unboxing video ke sath damaged/wrong item hone par return accept ho jata hai!";
             }
-
-            // 3. Strict Return Policy (Video Proof Condition)
-            if (q.includes('return') || q.includes('refund') || q.includes('exchange') || q.includes('wapas') || q.includes('policy')) {
-                return "🔄 Return & Exchange Policy:\n• Humare store ki strict No-Return Policy hai.\n• LEKIN agar aap parcel kholte waqt (Unboxing) ki complete Video banayein aur usme product damaged ya wrong nikle, toh parcel return/exchange ho jayega! 🎥✅\n• Proof video ke baghair return accept nahi kiya jayega.";
-            }
-
-            // 4. Security & Admin Credentials Guard
-            if (q.includes('password') || q.includes('admin pass') || q.includes('admin key') || q.includes('admin code') || q.includes('login code')) {
-                return "🔐 Security Guard: Admin passwords aur system credentials confidential hain aur share nahi kiye ja sakte.";
-            }
-
-            // 5. Greetings & Polite Responses
-            if (q.includes('aoa') || q.includes('assalam') || q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('kaise ho')) {
-                return "Walaikum Assalam! 🧸 Welcome to A&M Online Store. Main aap ka personal AI Assistant hoon. Aap mujh se kisi bhi toy ki price, stock status, delivery charges ya order karne ka tariqa pooch sakte hain!";
-            }
-
-            // 6. Payment Methods & COD Information
-            if (q.includes('payment') || q.includes('pay') || q.includes('cod') || q.includes('cash on delivery') || q.includes('paise kaise')) {
-                return "💳 Payment Details:\n• Main Payment Method: Cash on Delivery (COD).\n• Jab parcel aap ke ghar pohnchega tabhi aap ne cash pay karna hai!\n• Advance payment ki koi zaroorat nahi hai.";
-            }
-
-            // 7. Delivery Charges & Shipping Policy
-            if (q.includes('delivery') || q.includes('shipping') || q.includes('charges') || q.includes('free delivery') || q.includes('dilivery')) {
-                return `🚚 Delivery Info:\n• Standard Delivery Fee: Rs ${deliveryFee} (All Pakistan).\n• Delivery Time: 2 se 4 Working Days.\n• Full Pakistan main COD available hai!`;
-            }
-
-            // 8. Category-based Searches
-            if (q.includes('category') || q.includes('categories') || q.includes('kya kya hai') || q.includes('types')) {
-                return "🧸 Humare paas yeh Categories available hain:\n1. Action Figures 🦸‍♂️\n2. Educational Toys 📚\n3. RC Cars & Vehicles 🏎️\n4. Board Games 🎲\n5. Dolls & Plush 🧸\n\nAap kisi bhi category ka naam likh kar pooch sakte hain!";
-            }
-
-            // 9. Specific Keyword / Product Live Firestore Search
-            let searchKeywords = ['car', 'doll', 'game', 'toy', 'figure', 'puzzle', 'remote', 'blocks', 'robot', 'gun', 'bike', 'gari', 'gudda', 'khilona', 'pack', 'card', 'swim', 'glass', 'boomrange', 'ludo'];
-            let isProductSearch = searchKeywords.some(k => q.includes(k)) || q.includes('dikhao') || q.includes('chahiye') || q.includes('price');
-
-            if (isProductSearch) {
-                let matches = products.filter(p => {
-                    let name = p.name ? p.name.toLowerCase() : '';
-                    let cat = p.category ? p.category.toLowerCase() : '';
-                    let desc = p.description ? p.description.toLowerCase() : '';
-                    let cleanQ = q.replace(/(dikhao|chahiye|price|batao|kya|hai|show|me|how|to)/g, '').trim();
-                    
-                    return name.includes(q) || (cleanQ && (name.includes(cleanQ) || cat.includes(cleanQ) || desc.includes(cleanQ)));
-                });
-
-                if (matches.length > 0) {
-                    let resp = "🔎 Firebase Database se yeh Matching Toys mile hain:\n";
-                    matches.slice(0, 3).forEach(p => {
-                        let isAvail = (p.stockStatus !== "Out of Stock" && p.stockAvailable !== false);
-                        resp += `\n• ${p.name}\n  Price: ${p.salePrice || p.price}\n  Status: ${isAvail ? 'In Stock ✅' : 'Out of Stock 🚫'}\n`;
-                    });
-                    return resp;
-                }
-            }
-
-            // 10. Budget / Price Range Search
-            let priceMatch = q.match(/(\d+)/);
-            if (priceMatch && (q.includes('under') || q.includes('tak') || q.includes('andar') || q.includes('budget') || q.includes('rs') || q.includes('rupees'))) {
-                let maxBudget = parseInt(priceMatch[0]);
-                let affordable = products.filter(p => {
-                    let numPrice = parseInt((p.salePrice || p.price).toString().replace(/[^0-9]/g, '')) || 0;
-                    return numPrice <= maxBudget;
-                });
-
-                if (affordable.length > 0) {
-                    let resp = `💰 Rs ${maxBudget} ke budget mein yeh Best Items available hain:\n`;
-                    affordable.slice(0, 4).forEach(p => {
-                        let isAvail = (p.stockStatus !== "Out of Stock" && p.stockAvailable !== false);
-                        resp += `\n• ${p.name} - Price: ${p.salePrice || p.price} [${isAvail ? 'Available' : 'Out of Stock'}]`;
-                    });
-                    return resp;
-                } else {
-                    return `Afsos, Rs ${maxBudget} ke andar koi item nahi mila. Aap thoda budget barha kar search karein!`;
-                }
-            }
-
-            // 11. Cart Status Checks
-            if (q.includes('cart') || q.includes('kya kharida')) {
-                if (cart.length === 0) {
-                    return "🛒 Aap ki Cart filhal khali hai. Website par toys browse karke 'Add to Cart' click karein!";
-                }
-                let total = cart.reduce((sum, item) => sum + (parseInt((item.salePrice||item.price).toString().replace(/[^0-9]/g, '')) * item.qty), 0);
-                let itemsList = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
-                return `🛒 Aap ki Current Cart Details:\n• Items: ${itemsList}\n• Subtotal: Rs ${total.toLocaleString()}\n• Delivery: Rs ${deliveryFee}\n• Net Total: Rs ${(total + deliveryFee).toLocaleString()}`;
-            }
-
-            // 12. WhatsApp Contact & Support Location Info
-            if (q.includes('contact') || q.includes('number') || q.includes('whatsapp') || q.includes('location') || q.includes('address') || q.includes('dukan')) {
-                return "💬 Customer Support & HelpDesk:\n• WhatsApp Support: 0313 7221362\n• Timings: 10:00 AM - 10:00 PM\n• Fast Order Confirmation & Queries support available on WhatsApp!";
-            }
-
-            // 13. Intelligent Fallback
-            return "Main A&M Store ka Smart AI Assistant hoon! Aap mujh se order karne ka tariqa, return policy, delivery charges ya kisi bhi toy ki price pooch sakte hain.";
+            return "🧸 A&M Online Store par khush amdeed! Aap mujh se kisi bhi toy ki price, stock ya delivery ke baray mein pooch sakte hain.";
         }
 
-        function openPolicyModal(type) {
+        window.openPolicyModal = function(type) {
             let title = "Store Policy";
             let text = "Store Terms and Information.";
             if(type==='return') { title="Return & Refund Policy"; text="Strict No-Return policy. Return or exchange is ONLY accepted if an unboxing video is provided showing damaged or incorrect item."; }
@@ -1222,7 +1219,7 @@
             document.getElementById('policyModalText').innerText = text;
             document.getElementById('policyModal').classList.remove('hidden');
         }
-        function closePolicyModal() { document.getElementById('policyModal').classList.add('hidden'); }
+        window.closePolicyModal = function() { document.getElementById('policyModal').classList.add('hidden'); }
     </script>
 </body>
 </html>
