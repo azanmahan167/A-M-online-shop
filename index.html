@@ -99,7 +99,7 @@
             padding: 12px;
             background: white;
             border-top: 1px solid #e5e7eb;
-            gap: 6px;
+            gap: 8px;
             align-items: center;
         }
         #ai-user-input {
@@ -110,22 +110,16 @@
             outline: none;
             font-size: 13px;
         }
-        #ai-send-btn, #ai-train-btn {
+        #ai-send-btn {
             background: #4f46e5;
             color: white;
             border: none;
-            padding: 10px 12px;
+            padding: 10px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             font-size: 12px;
             white-space: nowrap;
-        }
-        #ai-train-btn {
-            background: #059669;
-        }
-        #ai-train-btn:hover {
-            background: #047857;
         }
 
         /* Loading Skeleton */
@@ -199,7 +193,7 @@
             <div class="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden flex flex-col items-center text-center space-y-4">
                 <span class="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest backdrop-blur-sm">🎉 Welcome to A&M Store</span>
                 <h2 class="text-2xl md:text-5xl font-black tracking-tight drop-shadow-md">Best Quality Toys Delivered To Your Doorstep!</h2>
-                <p class="text-indigo-100 text-xs md:text-sm max-w-xl">Cash on Delivery Available All Across Pakistan!</p>
+                <p class="text-indigo-100 text-xs md:text-sm max-w-xl">Cash on Delivery Available All Across Pakistan! Helpline: 03137221362</p>
             </div>
 
             <!-- Search Bar & Filters Section -->
@@ -306,14 +300,14 @@
                     <span class="font-extrabold text-white text-base">A&M Online Store</span>
                 </div>
                 <p class="text-gray-400 text-xs leading-relaxed">
-                    Premium quality toys, games, and entertainment items delivered with Cash on Delivery across Pakistan.
+                    Premium quality toys, games, and entertainment items delivered with Cash on Delivery across Pakistan. Website Link: https://azanmahan167.github.io/A-M-online-shop/
                 </p>
             </div>
 
             <div class="space-y-2">
                 <h4 class="font-bold text-white text-sm">💬 Support & Information</h4>
                 <ul class="space-y-1.5 text-gray-400">
-                    <li><a href="https://wa.me/923137221362" target="_blank" class="hover:text-emerald-400">WhatsApp Support: 0313 7221362</a></li>
+                    <li><a href="https://wa.me/923137221362" target="_blank" class="hover:text-emerald-400">WhatsApp Helpline: 03137221362</a></li>
                     <li><button onclick="openPolicyModal('delivery')" class="hover:text-white">Delivery Information</button></li>
                     <li><button onclick="openPolicyModal('cod')" class="hover:text-white">COD Information</button></li>
                     <li><button onclick="openPolicyModal('faq')" class="hover:text-white">FAQ / Contact Us</button></li>
@@ -337,14 +331,14 @@
                     <input type="text" id="visitorName" required placeholder="Aap ka Naam..." class="w-full px-3 py-2 bg-slate-900 border border-slate-700 text-white rounded-xl text-xs focus:outline-none focus:border-indigo-500">
                     <textarea id="visitorMsgText" required rows="2" placeholder="Apna message ya feedback yahan likhein..." class="w-full px-3 py-2 bg-slate-900 border border-slate-700 text-white rounded-xl text-xs focus:outline-none focus:border-indigo-500"></textarea>
                     <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl transition text-xs shadow">
-                        Send to Admin 🚀
+                        Send Message 🚀
                     </button>
                 </form>
             </div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-slate-800 text-center text-gray-500 text-[11px]">
-            © 2026 A&M Online Store. All Rights Reserved. Mobile Responsive E-Commerce System.
+            © 2026 A&M Online Store. All Rights Reserved. Fully Mobile & Laptop Responsive System.
         </div>
     </footer>
 
@@ -357,11 +351,10 @@
             <button onclick="toggleChat()" class="text-white text-lg font-bold">✕</button>
         </div>
         <div id="ai-chat-messages">
-            <div class="ai-msg ai-message">Assalam-o-Alaikum! 🧸 Main A&M Store ka Smart AI Assistant hoon. Order karne ka tariqa, prices, ya koi bhi item yahan poochein!</div>
+            <div class="ai-msg ai-message">Assalam-o-Alaikum! 🧸 Main A&M Store ka Smart AI Assistant hoon. Order karne ka tariqa, prices, helpline ya koi bhi item yahan poochein!</div>
         </div>
         <div id="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="Sawal likhein..." onkeypress="if(event.key === 'Enter') sendMessage()">
-            <button id="ai-train-btn" onclick="promptTrainBot()">Train 🧠</button>
+            <input type="text" id="ai-user-input" placeholder="Message likhein (e.g. Hello, order kaise karein)..." onkeypress="if(event.key === 'Enter') sendMessage()">
             <button id="ai-send-btn" onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -389,8 +382,8 @@
             <div class="border-t pt-4 sticky bottom-0 bg-white space-y-3 text-xs">
                 <div class="space-y-1 border-t border-b py-2 text-gray-700">
                     <div class="flex justify-between"><span>Subtotal:</span><span id="cartSubtotal">Rs 0</span></div>
-                    <div class="flex justify-between"><span>Delivery Charges:</span><span id="cartDelivery">Rs 200</span></div>
-                    <div class="flex justify-between text-indigo-950 font-black text-sm pt-1"><span>Final Total:</span><span id="cartFinalTotal">Rs 200</span></div>
+                    <div class="flex justify-between"><span>Delivery Charges:</span><span id="cartDelivery">Rs 20</span></div>
+                    <div class="flex justify-between text-indigo-950 font-black text-sm pt-1"><span>Final Total (COD):</span><span id="cartFinalTotal">Rs 20</span></div>
                 </div>
 
                 <div class="flex space-x-2">
@@ -401,11 +394,11 @@
         </div>
     </div>
 
-    <!-- 📦 CHECKOUT MODAL -->
+    <!-- 📦 CHECKOUT MODAL (COD ONLY) -->
     <div id="checkoutModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h2 class="text-lg font-extrabold text-indigo-950">📦 Complete Order (COD)</h2>
+                <h2 class="text-lg font-extrabold text-indigo-950">📦 Complete Order (Cash on Delivery)</h2>
                 <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
             </div>
             <form onsubmit="submitOrderToFirebase(event)" class="space-y-3 text-xs">
@@ -433,7 +426,7 @@
                 <!-- Summary Box -->
                 <div class="p-3 bg-indigo-50 rounded-xl space-y-1 font-semibold text-indigo-950">
                     <p>Payment Method: <strong>Cash on Delivery (COD)</strong></p>
-                    <p>Total Order Value: <strong id="checkoutTotalVal">Rs 0</strong></p>
+                    <p>Total Order Value: <strong id="checkoutTotalVal">Rs 20</strong></p>
                 </div>
 
                 <button type="submit" id="placeOrderBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow cursor-pointer text-sm">
@@ -497,7 +490,7 @@
 
                 <!-- Manage Products Tab -->
                 <div id="admSectionProducts" class="space-y-4 hidden">
-                    <h3 class="font-extrabold text-gray-800 text-sm">Add New Product to Store</h3>
+                    <h3 class="font-extrabold text-gray-800 text-sm">Add New Product to Store (Auto-Synced with AI)</h3>
                     <form onsubmit="addNewProductToFirebase(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <input type="text" id="newProdName" required placeholder="Product Name..." class="px-3 py-2 rounded-xl border">
                         <input type="text" id="newProdPrice" required placeholder="Price (e.g. 1500)..." class="px-3 py-2 rounded-xl border">
@@ -541,7 +534,7 @@
                     <div class="p-4 bg-gray-50 rounded-2xl border space-y-2">
                         <h4 class="font-bold">Delivery Charges Settings</h4>
                         <div class="flex space-x-2">
-                            <input type="number" id="settingDeliveryFee" value="200" class="px-3 py-1.5 border rounded-xl w-32">
+                            <input type="number" id="settingDeliveryFee" value="20" class="px-3 py-1.5 border rounded-xl w-32">
                             <button onclick="saveDeliveryFee()" class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Save Fee</button>
                         </div>
                     </div>
@@ -589,15 +582,13 @@
         let messagesList = [];
         let cart = JSON.parse(localStorage.getItem('am_cart_items')) || [];
         let wishlist = JSON.parse(localStorage.getItem('am_wishlist_items')) || [];
-        let deliveryFee = 200;
+        let deliveryFee = 20;
         let activeTabCategory = 'All';
-        let customTrainingData = '';
 
         window.onload = function() {
             listenToFirebaseProducts();
             listenToFirebaseOrders();
             listenToFirebaseMessages();
-            listenToFirebaseBotTraining();
             updateCartBadge();
             updateWishlistBadge();
         };
@@ -653,15 +644,7 @@
             });
         }
 
-        function listenToFirebaseBotTraining() {
-            db.collection("settings").doc("botTraining").onSnapshot(doc => {
-                if (doc.exists) {
-                    customTrainingData = doc.data().instruction || '';
-                }
-            });
-        }
-
-        // CUSTOMER MESSAGE SUBMISSION
+        // CUSTOMER MESSAGE SUBMISSION (Niche wala message box)
         window.submitCustomerMessage = function(e) {
             e.preventDefault();
             let name = document.getElementById('visitorName').value;
@@ -704,7 +687,6 @@
                 return matchesSearch && matchesCat && matchesAge && matchesPrice && matchesTab;
             });
 
-            // Sorting
             if(sortQ === 'priceLow') {
                 filtered.sort((a,b) => parseInt((a.salePrice||a.price).toString().replace(/[^0-9]/g, '')) - parseInt((b.salePrice||b.price).toString().replace(/[^0-9]/g, '')));
             } else if(sortQ === 'priceHigh') {
@@ -759,7 +741,6 @@
             document.getElementById('productCount').innerText = `Showing ${list.length} items`;
         }
 
-        // PRODUCT DETAILS VIEW
         window.viewProductDetails = function(id) {
             let prod = products.find(p => p.id === id);
             if (!prod) return;
@@ -935,12 +916,13 @@
                 address: address,
                 items: cart,
                 totalAmount: total,
+                paymentMethod: "Cash on Delivery",
                 status: "Pending",
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 clearCart();
                 closeCheckoutModal();
-                showToast(`Order #${orderId} placed successfully!`);
+                showToast(`Order #${orderId} placed successfully via COD!`);
             });
         }
 
@@ -1004,8 +986,7 @@
                                 <p class="font-bold text-indigo-900">• ${p.name}</p>
                                 <p><strong>Price:</strong> ${p.price} | <strong>Sale Price:</strong> ${p.salePrice || 'N/A'}</p>
                                 <p><strong>Category:</strong> ${p.category || 'Toys'} | <strong>Age:</strong> ${p.ageRecommendation || '3+'}</p>
-                                <p><strong>Description:</strong> ${p.description || 'N/A'}</p>
-                                <p><strong>Stock:</strong> <span class="${p.stockStatus==='Out of Stock'?'text-red-600':'text-emerald-600'} font-bold">${p.stockStatus || 'In Stock'}</span> | <strong>Qty:</strong> ${p.qty || 1}</p>
+                                <p><strong>Qty:</strong> ${p.qty || 1}</p>
                             </div>
                         `;
                     });
@@ -1017,7 +998,7 @@
                             <span>ID: ${order.orderId || order.id} | ${order.name}</span>
                             <span class="text-emerald-600">${order.status || 'Pending'}</span>
                         </div>
-                        <p class="text-gray-600">Phone: ${order.phone} | Address: ${order.address}, ${order.city}</p>
+                        <p class="text-gray-600">Phone: ${order.phone} | Address: ${order.address}, ${order.city} | COD</p>
                         <p class="font-bold text-gray-700">Ordered Product Details:</p>
                         ${itemsListHtml}
                         <div class="flex items-center space-x-2 pt-1">
@@ -1082,7 +1063,7 @@
                     description: document.getElementById('newProdDesc').value,
                     image: evt.target.result,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => showToast("Product Added Successfully!"));
+                }).then(() => showToast("Product Added Successfully to Firebase & AI Synced!"));
             };
             reader.readAsDataURL(file);
         }
@@ -1094,7 +1075,7 @@
             products.forEach(p => {
                 list.innerHTML += `
                     <div class="flex justify-between items-center p-2 bg-gray-50 border rounded text-xs">
-                        <span>${p.name} (${p.price}) - ${p.stockStatus || (p.stockAvailable===false ? 'Out of Stock' : 'In Stock')}</span>
+                        <span>${p.name} (${p.price}) - ${p.stockStatus || 'In Stock'}</span>
                         <button onclick="deleteProduct('${p.id}')" class="text-red-500 font-bold">Delete</button>
                     </div>
                 `;
@@ -1112,27 +1093,7 @@
             }
         }
 
-        // --- TRAIN BOT FUNCTIONALITY (SAVED TO FIREBASE) ---
-        window.promptTrainBot = function() {
-            let pass = prompt("Enter Password:");
-            if (pass === "0101") {
-                let newInstruction = prompt("Enter custom training instructions or knowledge for the bot:", customTrainingData);
-                if (newInstruction !== null) {
-                    db.collection("settings").doc("botTraining").set({
-                        instruction: newInstruction
-                    }).then(() => {
-                        customTrainingData = newInstruction;
-                        showToast("Bot successfully trained & saved to Firebase cloud!");
-                    }).catch(err => {
-                        showToast("Firebase save error!");
-                    });
-                }
-            } else if (pass !== null) {
-                showToast("Incorrect Password!");
-            }
-        }
-
-        // --- GEMINI API POWERED SMART AI ASSISTANT ENGINE ---
+        // --- GEMINI API POWERED SMART AI ASSISTANT ENGINE (AUTO-SYNCED) ---
         window.toggleChat = function() {
             let box = document.getElementById('ai-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
@@ -1155,19 +1116,18 @@
             try {
                 let productsContext = products.map(p => `- ${p.name}: Price: ${p.salePrice || p.price}, Category: ${p.category}, Stock: ${p.stockStatus || 'In Stock'}, Age: ${p.ageRecommendation}, Description: ${p.description || 'N/A'}`).join('\n');
                 
-                let systemInstruction = `You are the official Smart AI Assistant for "A&M Online Store", a toy and e-commerce platform in Pakistan. 
-                You have complete real-time information about all products added to the store inventory database.
-                You help customers with store policies, finding toys, checking exact prices, stock availability, cart status, delivery charges (Rs ${deliveryFee}), and ordering steps via Cash on Delivery (COD).
-                Store Return Policy: Strict No-Return policy, except if an unboxing video proving damage or wrong item is provided.
-                Contact: WhatsApp 0313 7221362.
-                Current Cart Items Count: ${cart.length}.
-                Complete Products Database Information:
+                let systemInstruction = `You are the official Smart AI Assistant for "A&M Online Store" (Website: https://azanmahan167.github.io/A-M-online-shop/). 
+                You respond warmly to greetings like "Hello", "Hey", "Assalam-o-Alaikum".
+                Helpline WhatsApp number: 03137221362.
+                Payment Method: Cash on Delivery (COD) only.
+                Order Steps: User adds products to cart, clicks cart icon, clicks Proceed to Checkout, fills out name, phone, city, area, address, and clicks Place Order Now.
+                Delivery Charges: Rs ${deliveryFee}.
+                Store Return Policy: Strict No-Return policy, but return is accepted IF an unboxing video proving damage or wrong item is provided.
+                Footer Message Box Info: Users can submit feedback or messages directly to the admin by filling out the name and message box at the bottom footer section.
+                Complete Real-Time Products Database (Synced from Firebase):
                 ${productsContext}
                 
-                Additional Custom Training Instructions provided by admin (stored securely on Firebase Cloud):
-                ${customTrainingData}
-                
-                Keep your answers helpful, polite, concise, and formatted nicely with emojis. Speak in Urdu/Roman Urdu if the user asks in Urdu/Roman Urdu, or match their language.`;
+                Keep your answers helpful, friendly, polite, concise, and formatted with emojis. Reply in Roman Urdu or English matching the user's language.`;
 
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
@@ -1178,7 +1138,7 @@
                     }
                 });
 
-                let botReply = response.text || "Main A&M Store ka Smart AI Assistant hoon! Aap mujh se order karne ka tariqa ya toys ke baray mein pooch sakte hain.";
+                let botReply = response.text || "Wa Alaikum Assalam! Main A&M Store ka Smart AI Assistant hoon.";
                 
                 document.getElementById(loadingId).remove();
                 container.innerHTML += `<div class="ai-msg ai-message">${botReply}</div>`;
@@ -1196,13 +1156,22 @@
 
         function getLocalSmartBotResponse(query) {
             let q = query.toLowerCase();
+            if (q.includes('hello') || q.includes('hey') || q.includes('assalam')) {
+                return "Walaikumsalam! A&M Online Store mein khush amdeed 🧸. Bataiye main aap ki kya madad karoon?";
+            }
             if (q.includes('order') || q.includes('tariqa')) {
-                return "🛍️ Order Karne Ka Tariqa: Add to Cart karein, Cart icon par click karke Proceed to Checkout dabayein, apni details likhein aur Place Order Now par click kar dein! (COD available)";
+                return "🛍️ Order Karne Ka Tariqa: Add to Cart karein, Cart icon par click karke Proceed to Checkout dabayein, apni details likhein aur Place Order Now par click kar dein! (Sirf Cash on Delivery available hai)";
             }
-            if (q.includes('return') || q.includes('policy')) {
-                return "🔄 Return Policy: Strict No-Return policy hai, lekin unboxing video ke sath damaged/wrong item hone par return accept ho jata hai!";
+            if (q.includes('helpline') || q.includes('number')) {
+                return "📞 Hamara official WhatsApp helpline number 03137221362 hai.";
             }
-            return "🧸 A&M Online Store par khush amdeed! Aap mujh se kisi bhi toy ki price, stock ya delivery ke baray mein pooch sakte hain.";
+            if (q.includes('link')) {
+                return "🔗 Hamari website ka link yeh hai: https://azanmahan167.github.io/A-M-online-shop/";
+            }
+            if (q.includes('return') || q.includes('wapsi')) {
+                return "🔄 Return Policy: Strict No-Return policy hai, lekin agar unboxing video ke sath damaged ya wrong item ki proof ho toh return ho jata hai!";
+            }
+            return "🧸 A&M Online Store par khush amdeed! Hamare paas Cash on Delivery par toys available hain. Helpline: 03137221362.";
         }
 
         window.openPolicyModal = function(type) {
@@ -1210,10 +1179,10 @@
             let text = "Store Terms and Information.";
             if(type==='return') { title="Return & Refund Policy"; text="Strict No-Return policy. Return or exchange is ONLY accepted if an unboxing video is provided showing damaged or incorrect item."; }
             if(type==='shipping' || type==='delivery') { title="Delivery Information"; text=`Delivery within 2-4 working days across Pakistan. Standard delivery charges are Rs ${deliveryFee}.`; }
-            if(type==='cod') { title="COD Information"; text="Pay cash at the time of delivery to courier."; }
-            if(type==='cancellation') { title="Cancellation Policy"; text="Orders can be cancelled before shipping."; }
+            if(type==='cod') { title="COD Information"; text="Only Cash on Delivery (COD) is available. Pay cash at the time of delivery to courier."; }
+            if(type==='cancellation') { title="Cancellation Policy"; text="Orders can be cancelled before shipping by contacting helpline 03137221362."; }
             if(type==='privacy') { title="Privacy Policy"; text="Customer data is fully secured with Firebase security rules."; }
-            if(type==='faq') { title="FAQ & Contact"; text="WhatsApp Support: 0313 7221362 | Store Timings: 10 AM - 10 PM"; }
+            if(type==='faq') { title="FAQ & Contact"; text="Website: https://azanmahan167.github.io/A-M-online-shop/ | WhatsApp Support: 03137221362 | Store Timings: 10 AM - 10 PM"; }
 
             document.getElementById('policyModalTitle').innerText = title;
             document.getElementById('policyModalText').innerText = text;
