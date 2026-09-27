@@ -632,11 +632,11 @@
         import { GoogleGenAI } from "@google/genai";
 
         // GEMINI API INITIALIZATION
-        const ai = new GoogleGenAI({ apiKey: "AIzaSyD02RIDSG86_ZF1Ea5hLRkceEG1RDqTUcM" });
+        const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6JMXCU0G4TACCvFBxm0v-CTQUOddnFHsAEOpqk_8fBGBw" });
 
         // FIREBASE INITIALIZATION
         const firebaseConfig = {
-            apiKey: "AIzaSyD02RIDSG86_ZF1Ea5hLRkceEG1RDqTUcM",
+            apiKey: "AQ.Ab8RN6JMXCU0G4TACCvFBxm0v-CTQUOddnFHsAEOpqk_8fBGBw",
             authDomain: "am-store-8de76.firebaseapp.com",
             projectId: "am-store-8de76",
             storageBucket: "am-store-8de76.firebasestorage.app",
@@ -1297,7 +1297,7 @@
             }
         }
 
-        // --- GEMINI API POWERED SMART AI ASSISTANT ENGINE (AUTO-SYNCED & UNCHANGED) ---
+        // --- ROBUST HYBRID AI ASSISTANT ENGINE (FIREBASE & PROXY FALLBACK) ---
         window.toggleChat = function() {
             let box = document.getElementById('ai-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
@@ -1317,21 +1317,22 @@
             container.innerHTML += `<div id="${loadingId}" class="ai-msg ai-message">Soch raha hoon... 🤖</div>`;
             container.scrollTop = container.scrollHeight;
 
+            let botReply = "";
+
             try {
                 let productsContext = products.map(p => `- ${p.name}: Price: ${p.salePrice || p.price}, Category: ${p.category}, Stock: ${p.stockStatus || 'In Stock'}, Age: ${p.ageRecommendation}, Description: ${p.description || 'N/A'}`).join('\n');
                 
                 let systemInstruction = `You are the official Smart AI Assistant for "A&M Online Store" (Website: https://azanmahan167.github.io/A-M-online-shop/). 
-                You respond warmly to greetings like "Hello", "Hey", "Assalam-o-Alaikum".
+                You respond warmly to greetings like "Hello", "Hey", "Assalam-o-Alaikum", "kaisa ho", "kya haal hai".
                 Helpline WhatsApp number: 03137221362.
                 Payment Method: Cash on Delivery (COD) only.
                 Order Steps: User adds products to cart, clicks cart icon, clicks Proceed to Checkout, fills out name, phone, city, area, address, and clicks Place Order Now.
                 Delivery Charges: Rs ${deliveryFee}.
                 Store Return Policy: Strict No-Return policy, but return is accepted IF an unboxing video proving damage or wrong item is provided.
-                Footer Message Box Info: Users can submit feedback or messages directly to the admin by filling out the name and message box at the bottom footer section.
                 Complete Real-Time Products Database (Synced from Firebase):
                 ${productsContext}
                 
-                Keep your answers helpful, friendly, polite, concise, and formatted with emojis. Reply in Roman Urdu or English matching the user's language.`;
+                Keep your answers helpful, friendly, polite, concise, and formatted with emojis. Reply in Roman Urdu or English matching the user's language. Always answer any general or specific query accurately.`;
 
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
@@ -1342,40 +1343,71 @@
                     }
                 });
 
-                let botReply = response.text || "Wa Alaikum Assalam! Main A&M Store ka Smart AI Assistant hoon.";
-                
-                document.getElementById(loadingId).remove();
-                container.innerHTML += `<div class="ai-msg ai-message">${botReply}</div>`;
-                container.scrollTop = container.scrollHeight;
-
+                botReply = response.text;
             } catch (err) {
-                console.error("Gemini API Error:", err);
-                document.getElementById(loadingId).remove();
-                
-                let fallbackReply = getLocalSmartBotResponse(text);
-                container.innerHTML += `<div class="ai-msg ai-message">${fallbackReply}</div>`;
-                container.scrollTop = container.scrollHeight;
+                console.warn("Direct API blocked/failed, using intelligent fallback rules.", err);
             }
+
+            // Agar direct API response na mile ya block ho jaye, toh advanced fallback engine har sawal ka jawab dega
+            if (!botReply) {
+                botReply = getAdvancedSmartBotResponse(text);
+            }
+                
+            document.getElementById(loadingId).remove();
+            container.innerHTML += `<div class="ai-msg ai-message">${botReply}</div>`;
+            container.scrollTop = container.scrollHeight;
         }
 
-        function getLocalSmartBotResponse(query) {
+        function getAdvancedSmartBotResponse(query) {
             let q = query.toLowerCase();
-            if (q.includes('hello') || q.includes('hey') || q.includes('assalam')) {
-                return "Walaikumsalam! A&M Online Store mein khush amdeed 🧸. Bataiye main aap ki kya madad karoon?";
+            
+            // Greetings & General Chat
+            if (q.includes('hello') || q.includes('hey') || q.includes('assalam') || q.includes('salam')) {
+                return "Walaikumsalam! A&M Online Store mein khush amdeed 🧸. Main bilkul theek hoon, bataiye aaj aap ko kaun sa toy ya item chahiye?";
             }
-            if (q.includes('order') || q.includes('tariqa')) {
-                return "🛍️ Order Karne Ka Tariqa: Add to Cart karein, Cart icon par click karke Proceed to Checkout dabayein, apni details likhein aur Place Order Now par click kar dein! (Sirf Cash on Delivery available hai)";
+            if (q.includes('kaisa ho') || q.includes('kya haal') || q.includes('how are you')) {
+                return "Main ek AI Assistant hoon aur aap ki khidmat ke liye hamesha tayar hoon! Aap batayein aap kaise hain aur store par kya dekhna chahenge? 😊";
             }
-            if (q.includes('helpline') || q.includes('number')) {
-                return "📞 Hamara official WhatsApp helpline number 03137221362 hai.";
+            if (q.includes('kaun ho') || q.includes('who are you') || q.includes('introduce')) {
+                return "Main A&M Online Store ka Smart AI Assistant hoon jo aap ki shopping, order placement aur product selection mein madad karta hoon! 🧸🚀";
             }
-            if (q.includes('link')) {
-                return "🔗 Hamari website ka link yeh hai: https://azanmahan167.github.io/A-M-online-shop/";
+
+            // Orders & Checkout
+            if (q.includes('order') || q.includes('tariqa') || q.includes('kaise karein') || q.includes('kharab')) {
+                return "🛍️ **Order Karne Ka Asaan Tariqa:**\n1. Apni pasand ka product chun kar 'Add to Cart' ya 'Buy Now' dabayein.\n2. Upar diye gaye **Cart** icon par click karein.\n3. 'Proceed to Checkout' par click karke apna Naam, WhatsApp Number, City, aur Complete Address likhein.\n4. 'Place Order Now' dabate hi aapka order Cash on Delivery (COD) par confirm ho jayega! 📦";
             }
-            if (q.includes('return') || q.includes('wapsi')) {
-                return "🔄 Return Policy: Strict No-Return policy hai, lekin agar unboxing video ke sath damaged ya wrong item ki proof ho toh return ho jata hai!";
+            if (q.includes('payment') || q.includes('paisa') || q.includes('jazzcash') || q.includes('easypaisa') || q.includes('online payment')) {
+                return "💵 Hamare store par sirf **Cash on Delivery (COD)** ki sahulat available hai. Jab order aapke ghar pohnchega tab aap courier ko cash pay karenge.";
             }
-            return "🧸 A&M Online Store par khush amdeed! Hamare paas Cash on Delivery par toys available hain. Helpline: 03137221362.";
+
+            // Contact & Helpline
+            if (q.includes('helpline') || q.includes('number') || q.includes('whatsapp') || q.includes('rabta') || q.includes('contact')) {
+                return "📞 Aap hum se WhatsApp par direct rabta kar sakte hain:\nOfficial Helpline: **03137221362** ( ya click karein: https://wa.me/923137221362 ) 💬";
+            }
+            if (q.includes('link') || q.includes('website') || q.includes('site')) {
+                return "🔗 Hamari official website ka link yeh hai: https://azanmahan167.github.io/A-M-online-shop/";
+            }
+
+            // Policies
+            if (q.includes('return') || q.includes('wapsi') || q.includes('refund') || q.includes('exchange')) {
+                return "🔄 **Return Policy:** Hamari strict No-Return policy hai, lekin agar aapke paas **unboxing video** maujood hai jisme itemdamaged ya galat nikle, toh hum return/exchange accept kar lete hain!";
+            }
+            if (q.includes('delivery') || q.includes('shipping') || q.includes('charges') || q.includes('din')) {
+                return "🚚 Delivery poore Pakistan mein 2 se 4 working days mein ho jati hai. Standard delivery charges **Rs " + deliveryFee + "** hain.";
+            }
+
+            // Products database check
+            let matchedProd = products.find(p => q.includes(p.name.toLowerCase()) || (p.category && q.includes(p.category.toLowerCase())));
+            if (matchedProd) {
+                return `🧸 **${matchedProd.name}**\n- Price: ${matchedProd.salePrice || matchedProd.price}\n- Category: ${matchedProd.category}\n- Age Group: ${matchedProd.ageRecommendation || '3+ Years'}\n- Status: ${matchedProd.stockStatus || 'In Stock'}\n\nAap ise cart mein add karke foran order kar sakte hain! 🚀`;
+            }
+
+            if (q.includes('price') || q.includes('qimat') || q.includes('rate') || q.includes('kya hai')) {
+                let listStr = products.slice(0, 5).map(p => `• ${p.name}: ${p.salePrice || p.price}`).join('\n');
+                return `🧸 Yeh hamare kuch popular items hain:\n${listStr}\nAap mazeed items ke liye website ka catalog check kar sakte hain!`;
+            }
+
+            return `🧸 A&M Online Store par khush amdeed! Hamare paas bacho ke liye behtareen toys aur games Cash on Delivery par available hain. Mazeed maloomat ke liye helpline **03137221362** par rabta karein! 🚀`;
         }
 
         window.openPolicyModal = function(type) {
