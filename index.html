@@ -9,6 +9,7 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Poppins', sans-serif; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
@@ -171,6 +172,10 @@
                     <span id="wishlistBadge" class="bg-pink-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-extrabold">0</span>
                 </button>
 
+                <button onclick="openAuthModal()" id="authNavBtn" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+                    <span>👤 Login / Register</span>
+                </button>
+
                 <button onclick="openAdminLogin()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-xl text-xs font-bold transition shadow-md flex items-center space-x-1">
                     <span>👨‍💼 Admin</span>
                 </button>
@@ -286,6 +291,29 @@
                     <button onclick="switchSection('homeSection')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">← Back to Store</button>
                 </div>
                 <div id="wishlistGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- 👤 CUSTOMER ACCOUNT DASHBOARD SECTION -->
+        <section id="accountSection" class="hidden space-y-6">
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white/20 space-y-6">
+                <div class="flex justify-between items-center border-b pb-4">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-indigo-950">👤 Customer Account Dashboard</h2>
+                        <p id="accountUserEmail" class="text-xs text-indigo-700 font-semibold mt-0.5">user@email.com</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="switchSection('homeSection')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">← Back to Store</button>
+                        <button onclick="logoutUser()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Logout 🚪</button>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-extrabold text-gray-800 text-sm">📦 My Order History</h3>
+                    <div id="customerOrdersList" class="space-y-3">
+                        <p class="text-xs text-gray-500">Loading your orders...</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -436,6 +464,50 @@
         </div>
     </div>
 
+    <!-- 🔑 CUSTOMER LOGIN / REGISTER MODAL -->
+    <div id="authModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-6 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            
+            <div class="text-center mb-4">
+                <span class="text-3xl">🧸</span>
+                <h3 id="authModalTitle" class="text-lg font-extrabold text-indigo-950 mt-1">Customer Login</h3>
+                <p class="text-xs text-gray-500">Access your wishlist and order history</p>
+            </div>
+
+            <!-- Tab Switcher for Login / Register -->
+            <div class="flex bg-gray-100 p-1 rounded-2xl mb-4 text-xs font-bold">
+                <button type="button" onclick="switchAuthTab('login')" id="tabLoginBtn" class="flex-1 py-2 rounded-xl bg-white shadow text-indigo-950 transition">Login</button>
+                <button type="button" onclick="switchAuthTab('register')" id="tabRegisterBtn" class="flex-1 py-2 rounded-xl text-gray-500 transition">Register</button>
+            </div>
+
+            <!-- Auth Form -->
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Email Address:</label>
+                    <input type="email" id="authEmail" required placeholder="name@example.com" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-600">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Password:</label>
+                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full px-3 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:border-indigo-600">
+                </div>
+                
+                <button type="submit" id="authSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow transition text-sm">
+                    Login to Account 🚀
+                </button>
+            </form>
+
+            <div class="relative my-4 text-center">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                <span class="relative bg-white px-3 text-[11px] text-gray-500 font-semibold uppercase">Or continue with</span>
+            </div>
+
+            <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:bg-gray-50 py-2.5 rounded-xl font-bold text-gray-700 transition text-xs shadow-sm">
+                <span>🌐 Sign in with Google</span>
+            </button>
+        </div>
+    </div>
+
     <!-- 👨‍💼 ADMIN PANEL MODAL -->
     <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
@@ -575,6 +647,7 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
 
         // GLOBAL APP STATE
         let products = [];
@@ -584,6 +657,8 @@
         let wishlist = JSON.parse(localStorage.getItem('am_wishlist_items')) || [];
         let deliveryFee = 20;
         let activeTabCategory = 'All';
+        let currentUser = null;
+        let authMode = 'login'; // 'login' or 'register'
 
         window.onload = function() {
             listenToFirebaseProducts();
@@ -591,15 +666,26 @@
             listenToFirebaseMessages();
             updateCartBadge();
             updateWishlistBadge();
+
+            // Firebase Auth State Listener
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                updateAuthHeaderUI();
+                if (user) {
+                    loadCustomerOrders(user.uid);
+                }
+            });
         };
 
         // NAVIGATION CONTROL
         window.switchSection = function(sectionId) {
             document.getElementById('homeSection').classList.add('hidden');
             document.getElementById('wishlistSection').classList.add('hidden');
+            document.getElementById('accountSection').classList.add('hidden');
             
             document.getElementById(sectionId).classList.remove('hidden');
             if(sectionId === 'wishlistSection') renderWishlistGrid();
+            if(sectionId === 'accountSection' && currentUser) loadCustomerOrders(currentUser.uid);
         }
 
         window.showToast = function(msg) {
@@ -629,6 +715,7 @@
                 });
                 renderAdminOrders();
                 calculateAdminMetrics();
+                if (currentUser) loadCustomerOrders(currentUser.uid);
             });
         }
 
@@ -644,7 +731,121 @@
             });
         }
 
-        // CUSTOMER MESSAGE SUBMISSION (Niche wala message box)
+        // CUSTOMER AUTHENTICATION SYSTEM
+        window.openAuthModal = function() {
+            if (currentUser) {
+                switchSection('accountSection');
+            } else {
+                document.getElementById('authModal').classList.remove('hidden');
+            }
+        }
+        window.closeAuthModal = function() { document.getElementById('authModal').classList.add('hidden'); }
+
+        window.switchAuthTab = function(mode) {
+            authMode = mode;
+            const title = document.getElementById('authModalTitle');
+            const btn = document.getElementById('authSubmitBtn');
+            const loginBtn = document.getElementById('tabLoginBtn');
+            const regBtn = document.getElementById('tabRegisterBtn');
+
+            if (mode === 'login') {
+                title.innerText = 'Customer Login';
+                btn.innerText = 'Login to Account 🚀';
+                loginBtn.className = 'flex-1 py-2 rounded-xl bg-white shadow text-indigo-950 transition';
+                regBtn.className = 'flex-1 py-2 rounded-xl text-gray-500 transition';
+            } else {
+                title.innerText = 'Create New Account';
+                btn.innerText = 'Register Account 🚀';
+                regBtn.className = 'flex-1 py-2 rounded-xl bg-white shadow text-indigo-950 transition';
+                loginBtn.className = 'flex-1 py-2 rounded-xl text-gray-500 transition';
+            }
+        }
+
+        window.handleAuthSubmit = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+
+            if (authMode === 'login') {
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(res => {
+                        closeAuthModal();
+                        showToast(`Welcome back, ${res.user.email}!`);
+                        switchSection('accountSection');
+                    })
+                    .catch(err => showToast("Login Error: " + err.message));
+            } else {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(res => {
+                        closeAuthModal();
+                        showToast(`Account created successfully! Welcome.`);
+                        switchSection('accountSection');
+                    })
+                    .catch(err => showToast("Registration Error: " + err.message));
+            }
+        }
+
+        window.loginWithGoogle = function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(res => {
+                    closeAuthModal();
+                    showToast(`Successfully signed in with Google!`);
+                    switchSection('accountSection');
+                })
+                .catch(err => showToast("Google Sign-In Error: " + err.message));
+        }
+
+        window.logoutUser = function() {
+            auth.signOut().then(() => {
+                showToast("Logged out successfully!");
+                switchSection('homeSection');
+            });
+        }
+
+        function updateAuthHeaderUI() {
+            const navBtn = document.getElementById('authNavBtn');
+            if (currentUser) {
+                navBtn.innerHTML = `<span>👤 My Account</span>`;
+                document.getElementById('accountUserEmail').innerText = currentUser.email;
+            } else {
+                navBtn.innerHTML = `<span>👤 Login / Register</span>`;
+            }
+        }
+
+        function loadCustomerOrders(uid) {
+            const container = document.getElementById('customerOrdersList');
+            if (!container) return;
+            
+            const userOrders = orders.filter(o => o.userId === uid || (currentUser && o.email === currentUser.email));
+            
+            if (userOrders.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 bg-gray-50 p-4 rounded-xl border">You haven't placed any orders yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            userOrders.forEach(ord => {
+                let itemsHtml = '';
+                if (ord.items) {
+                    ord.items.forEach(it => {
+                        itemsHtml += `<span class="bg-indigo-50 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded mr-1">${it.name} (x${it.qty})</span>`;
+                    });
+                }
+                container.innerHTML += `
+                    <div class="bg-gray-50 p-4 rounded-2xl border text-xs space-y-2">
+                        <div class="flex justify-between font-bold text-indigo-950">
+                            <span>Order ID: ${ord.orderId || ord.id}</span>
+                            <span class="text-emerald-600">${ord.status || 'Pending'}</span>
+                        </div>
+                        <p class="text-gray-600">Total Amount: <strong>Rs ${ord.totalAmount}</strong> | Payment: Cash on Delivery</p>
+                        <div><p class="font-semibold text-gray-700 mb-1">Items:</p><div>${itemsHtml}</div></div>
+                    </div>
+                `;
+            });
+        }
+
+        // CUSTOMER MESSAGE SUBMISSION
         window.submitCustomerMessage = function(e) {
             e.preventDefault();
             let name = document.getElementById('visitorName').value;
@@ -653,6 +854,7 @@
             db.collection("messages").add({
                 name: name,
                 message: msgText,
+                userId: currentUser ? currentUser.uid : 'guest',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 document.getElementById('visitorName').value = '';
@@ -909,6 +1111,8 @@
 
             db.collection("orders").doc(orderId).set({
                 orderId: orderId,
+                userId: currentUser ? currentUser.uid : 'guest',
+                email: currentUser ? currentUser.email : 'guest@store.com',
                 name: name,
                 phone: phone,
                 city: city,
@@ -998,7 +1202,7 @@
                             <span>ID: ${order.orderId || order.id} | ${order.name}</span>
                             <span class="text-emerald-600">${order.status || 'Pending'}</span>
                         </div>
-                        <p class="text-gray-600">Phone: ${order.phone} | Address: ${order.address}, ${order.city} | COD</p>
+                        <p class="text-gray-600">Email: ${order.email || 'Guest'} | Phone: ${order.phone} | Address: ${order.address}, ${order.city}</p>
                         <p class="font-bold text-gray-700">Ordered Product Details:</p>
                         ${itemsListHtml}
                         <div class="flex items-center space-x-2 pt-1">
@@ -1093,7 +1297,7 @@
             }
         }
 
-        // --- GEMINI API POWERED SMART AI ASSISTANT ENGINE (AUTO-SYNCED) ---
+        // --- GEMINI API POWERED SMART AI ASSISTANT ENGINE (AUTO-SYNCED & UNCHANGED) ---
         window.toggleChat = function() {
             let box = document.getElementById('ai-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
