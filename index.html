@@ -161,7 +161,7 @@
                 <span class="text-3xl">🧸</span>
                 <div>
                     <h1 class="font-black text-indigo-950 text-lg md:text-xl tracking-tight leading-none">A&M Online Store</h1>
-                    <p class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">Toys & Fun Headquarters</p>
+                    <p class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">Toys, Grocery, Stationery & Electronics</p>
                 </div>
             </div>
 
@@ -197,7 +197,7 @@
             <!-- Hero Banner -->
             <div class="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden flex flex-col items-center text-center space-y-4">
                 <span class="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest backdrop-blur-sm">🎉 Welcome to A&M Store</span>
-                <h2 class="text-2xl md:text-5xl font-black tracking-tight drop-shadow-md">Best Quality Toys Delivered To Your Doorstep!</h2>
+                <h2 class="text-2xl md:text-5xl font-black tracking-tight drop-shadow-md">Toys, Grocery, Stationery & Electronics Delivered Fast!</h2>
                 <p class="text-indigo-100 text-xs md:text-sm max-w-xl">Cash on Delivery Available All Across Pakistan! Helpline: 03137221362</p>
             </div>
 
@@ -207,9 +207,9 @@
                     <span>🔎 Search & Filters</span>
                 </h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <!-- Search Input -->
-                    <div class="md:col-span-4 flex items-center bg-gray-100 rounded-2xl p-2 border border-gray-200 focus-within:border-indigo-600">
+                    <div class="md:col-span-3 flex items-center bg-gray-100 rounded-2xl p-2 border border-gray-200 focus-within:border-indigo-600">
                         <span class="px-3 text-gray-400">🔍</span>
                         <input type="text" id="searchInput" onkeyup="applySearchAndFilters()" placeholder="Search Products by Name..." class="w-full text-xs md:text-sm bg-transparent focus:outline-none pr-2">
                     </div>
@@ -219,23 +219,10 @@
                         <label class="block text-[11px] font-bold text-gray-500 mb-1">Category Filter</label>
                         <select id="filterCategory" onchange="applySearchAndFilters()" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-semibold text-gray-700 focus:outline-none">
                             <option value="All">All Categories</option>
-                            <option value="Action Figures">Action Figures</option>
-                            <option value="Educational Toys">Educational Toys</option>
-                            <option value="RC Cars & Vehicles">RC Cars & Vehicles</option>
-                            <option value="Board Games">Board Games</option>
-                            <option value="Dolls & Plush">Dolls & Plush</option>
-                        </select>
-                    </div>
-
-                    <!-- Age Filter -->
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-500 mb-1">Age Recommendation</label>
-                        <select id="filterAge" onchange="applySearchAndFilters()" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-semibold text-gray-700 focus:outline-none">
-                            <option value="All">All Ages</option>
-                            <option value="0-3">0 - 3 Years</option>
-                            <option value="3-6">3 - 6 Years</option>
-                            <option value="6-12">6 - 12 Years</option>
-                            <option value="12+">12+ Years</option>
+                            <option value="Toys">🧸 Toys</option>
+                            <option value="Grocery">🛒 Grocery</option>
+                            <option value="Stationery">📚 Stationery</option>
+                            <option value="Electronic Things">⚡ Electronic Things</option>
                         </select>
                     </div>
 
@@ -259,17 +246,17 @@
 
             <!-- Category Fast Tabs -->
             <div class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none" id="categoryTabs">
-                <button onclick="setCategoryTab('All')" class="cat-btn bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">All Products</button>
-                <button onclick="setCategoryTab('Featured')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">⭐ Featured Products</button>
-                <button onclick="setCategoryTab('New Arrivals')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">🔥 New Arrivals</button>
-                <button onclick="setCategoryTab('Best Sellers')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">🏆 Best Sellers</button>
-                <button onclick="setCategoryTab('Sale')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">💥 Discount Products</button>
+                <button onclick="setCategoryTab('All')" class="cat-btn bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">All Items</button>
+                <button onclick="setCategoryTab('Toys')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">🧸 Toys</button>
+                <button onclick="setCategoryTab('Grocery')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">🛒 Grocery</button>
+                <button onclick="setCategoryTab('Stationery')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">📚 Stationery</button>
+                <button onclick="setCategoryTab('Electronic Things')" class="cat-btn bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition shrink-0">⚡ Electronic Things</button>
             </div>
 
             <!-- Products Catalog -->
             <div>
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-extrabold text-white text-lg md:text-xl drop-shadow">🧸 Product Catalog</h3>
+                    <h3 class="font-extrabold text-white text-lg md:text-xl drop-shadow">📦 Product Catalog</h3>
                     <span id="productCount" class="text-indigo-200 text-xs font-semibold">Loading Firebase items...</span>
                 </div>
 
@@ -328,7 +315,7 @@
                     <span class="font-extrabold text-white text-base">A&M Online Store</span>
                 </div>
                 <p class="text-gray-400 text-xs leading-relaxed">
-                    Premium quality toys, games, and entertainment items delivered with Cash on Delivery across Pakistan. Website Link: https://azanmahan167.github.io/A-M-online-shop/
+                    Toys, Grocery, Stationery, and Electronics delivered with Cash on Delivery across Pakistan. Website Link: https://azanmahan167.github.io/A-M-online-shop/
                 </p>
             </div>
 
@@ -379,10 +366,10 @@
             <button onclick="toggleChat()" class="text-white text-lg font-bold">✕</button>
         </div>
         <div id="ai-chat-messages">
-            <div class="ai-msg ai-message">Assalam-o-Alaikum! 🧸 Main A&M Store ka Smart AI Assistant hoon. Order karne ka tariqa, prices, helpline ya koi bhi item yahan poochein!</div>
+            <div class="ai-msg ai-message">Assalam-o-Alaikum! 🧸 Main A&M Store ka Smart AI Assistant hoon. Toys, Grocery, Stationery ya Electronics items ke mutaliq koi bhi sawal poochein!</div>
         </div>
         <div id="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="Message likhein (e.g. Hello, order kaise karein)..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <input type="text" id="ai-user-input" placeholder="Message likhein (e.g. Toys dikhayein)..." onkeypress="if(event.key === 'Enter') sendMessage()">
             <button id="ai-send-btn" onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -410,8 +397,8 @@
             <div class="border-t pt-4 sticky bottom-0 bg-white space-y-3 text-xs">
                 <div class="space-y-1 border-t border-b py-2 text-gray-700">
                     <div class="flex justify-between"><span>Subtotal:</span><span id="cartSubtotal">Rs 0</span></div>
-                    <div class="flex justify-between"><span>Delivery Charges:</span><span id="cartDelivery">Rs 20</span></div>
-                    <div class="flex justify-between text-indigo-950 font-black text-sm pt-1"><span>Final Total (COD):</span><span id="cartFinalTotal">Rs 20</span></div>
+                    <div class="flex justify-between"><span>Delivery Charges:</span><span id="cartDelivery">Rs 40</span></div>
+                    <div class="flex justify-between text-indigo-950 font-black text-sm pt-1"><span>Final Total (COD):</span><span id="cartFinalTotal">Rs 40</span></div>
                 </div>
 
                 <div class="flex space-x-2">
@@ -454,7 +441,7 @@
                 <!-- Summary Box -->
                 <div class="p-3 bg-indigo-50 rounded-xl space-y-1 font-semibold text-indigo-950">
                     <p>Payment Method: <strong>Cash on Delivery (COD)</strong></p>
-                    <p>Total Order Value: <strong id="checkoutTotalVal">Rs 20</strong></p>
+                    <p>Total Order Value: <strong id="checkoutTotalVal">Rs 40</strong></p>
                 </div>
 
                 <button type="submit" id="placeOrderBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow cursor-pointer text-sm">
@@ -562,23 +549,16 @@
 
                 <!-- Manage Products Tab -->
                 <div id="admSectionProducts" class="space-y-4 hidden">
-                    <h3 class="font-extrabold text-gray-800 text-sm">Add New Product to Store (Auto-Synced with AI)</h3>
+                    <h3 class="font-extrabold text-gray-800 text-sm">Add New Product to Store (Auto-Synced with Firebase Firestore & AI)</h3>
                     <form onsubmit="addNewProductToFirebase(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <input type="text" id="newProdName" required placeholder="Product Name..." class="px-3 py-2 rounded-xl border">
                         <input type="text" id="newProdPrice" required placeholder="Price (e.g. 1500)..." class="px-3 py-2 rounded-xl border">
                         <input type="text" id="newProdSalePrice" placeholder="Sale Price (Optional)..." class="px-3 py-2 rounded-xl border">
-                        <select id="newProdCategory" class="px-3 py-2 rounded-xl border">
-                            <option value="Action Figures">Action Figures</option>
-                            <option value="Educational Toys">Educational Toys</option>
-                            <option value="RC Cars & Vehicles">RC Cars & Vehicles</option>
-                            <option value="Board Games">Board Games</option>
-                            <option value="Dolls & Plush">Dolls & Plush</option>
-                        </select>
-                        <select id="newProdAge" class="px-3 py-2 rounded-xl border">
-                            <option value="0-3">0-3 Years</option>
-                            <option value="3-6">3-6 Years</option>
-                            <option value="6-12">6-12 Years</option>
-                            <option value="12+">12+ Years</option>
+                        <select id="newProdCategory" class="px-3 py-2 rounded-xl border font-bold text-indigo-900">
+                            <option value="Toys">🧸 Toys</option>
+                            <option value="Grocery">🛒 Grocery</option>
+                            <option value="Stationery">📚 Stationery</option>
+                            <option value="Electronic Things">⚡ Electronic Things</option>
                         </select>
                         <select id="newProdStock" class="px-3 py-2 rounded-xl border">
                             <option value="In Stock">In Stock</option>
@@ -587,7 +567,7 @@
                         <textarea id="newProdDesc" placeholder="Product Description..." class="md:col-span-2 px-3 py-2 rounded-xl border" rows="2"></textarea>
                         <input type="file" id="newProdFile" accept="image/*" required class="md:col-span-2 text-xs">
                         <button type="submit" id="saveProdBtn" class="md:col-span-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl transition">
-                            Publish Product to Firebase 🚀
+                            Publish Product to Firebase Firestore 🚀
                         </button>
                     </form>
 
@@ -606,7 +586,7 @@
                     <div class="p-4 bg-gray-50 rounded-2xl border space-y-2">
                         <h4 class="font-bold">Delivery Charges Settings</h4>
                         <div class="flex space-x-2">
-                            <input type="number" id="settingDeliveryFee" value="20" class="px-3 py-1.5 border rounded-xl w-32">
+                            <input type="number" id="settingDeliveryFee" value="40" class="px-3 py-1.5 border rounded-xl w-32">
                             <button onclick="saveDeliveryFee()" class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl">Save Fee</button>
                         </div>
                     </div>
@@ -655,7 +635,7 @@
         let messagesList = [];
         let cart = JSON.parse(localStorage.getItem('am_cart_items')) || [];
         let wishlist = JSON.parse(localStorage.getItem('am_wishlist_items')) || [];
-        let deliveryFee = 20;
+        let deliveryFee = 40; // Delivery charges set to 40
         let activeTabCategory = 'All';
         let currentUser = null;
         let authMode = 'login'; // 'login' or 'register'
@@ -700,7 +680,11 @@
             db.collection("toys").orderBy("createdAt", "desc").onSnapshot(snapshot => {
                 products = [];
                 snapshot.forEach(doc => {
-                    products.push({ id: doc.id, ...doc.data() });
+                    let data = doc.data();
+                    if (!data.category || data.category.trim() === "") {
+                        data.category = "Toys";
+                    }
+                    products.push({ id: doc.id, ...data });
                 });
                 applySearchAndFilters();
                 renderAdminProductList();
@@ -869,7 +853,6 @@
         window.applySearchAndFilters = function() {
             let searchQ = document.getElementById('searchInput').value.toLowerCase();
             let categoryQ = document.getElementById('filterCategory').value;
-            let ageQ = document.getElementById('filterAge').value;
             let maxPrice = parseInt(document.getElementById('filterPrice').value);
             let sortQ = document.getElementById('sortBy').value;
 
@@ -877,16 +860,11 @@
                 let pPrice = parseInt((p.salePrice || p.price).toString().replace(/[^0-9]/g, '')) || 0;
                 let matchesSearch = p.name.toLowerCase().includes(searchQ);
                 let matchesCat = (categoryQ === 'All') || (p.category === categoryQ);
-                let matchesAge = (ageQ === 'All') || (p.ageRecommendation === ageQ);
                 let matchesPrice = pPrice <= maxPrice;
 
-                let matchesTab = true;
-                if(activeTabCategory === 'Featured') matchesTab = p.isFeatured;
-                if(activeTabCategory === 'New Arrivals') matchesTab = p.isNewArrival;
-                if(activeTabCategory === 'Best Sellers') matchesTab = p.isBestSeller;
-                if(activeTabCategory === 'Sale') matchesTab = !!p.salePrice;
+                let matchesTab = (activeTabCategory === 'All') || (p.category === activeTabCategory);
 
-                return matchesSearch && matchesCat && matchesAge && matchesPrice && matchesTab;
+                return matchesSearch && matchesCat && matchesPrice && matchesTab;
             });
 
             if(sortQ === 'priceLow') {
@@ -900,6 +878,7 @@
 
         window.setCategoryTab = function(tabName) {
             activeTabCategory = tabName;
+            document.getElementById('filterCategory').value = tabName;
             applySearchAndFilters();
         }
 
@@ -919,15 +898,22 @@
                     <div class="glass-card rounded-2xl overflow-hidden shadow-lg border border-white/20 flex flex-col justify-between transition transform hover:-translate-y-1">
                         <div class="relative">
                             <img src="${prod.image}" alt="${prod.name}" class="w-full h-44 object-cover cursor-pointer" onclick="viewProductDetails('${prod.id}')">
+                            
+                            <!-- Download Picture Button (Top-Left) -->
+                            <button onclick="downloadProductImage('${prod.image}', '${prod.name}')" title="Download Image" class="absolute top-2 left-2 bg-indigo-600/90 hover:bg-indigo-700 text-white p-1.5 rounded-full text-xs shadow-md transition hover:scale-110 flex items-center justify-center">
+                                📥
+                            </button>
+
+                            <!-- Wishlist Button (Top-Right) -->
                             <button onclick="toggleWishlist('${prod.id}')" class="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full text-sm hover:scale-110 transition">
                                 ${isWish ? '❤️' : '🤍'}
                             </button>
+
                             <span class="absolute bottom-2 left-2 bg-indigo-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${prod.category || 'Toys'}</span>
                         </div>
                         <div class="p-4 flex-1 flex flex-col justify-between">
                             <div>
                                 <h4 class="font-bold text-gray-900 text-sm hover:text-indigo-600 cursor-pointer" onclick="viewProductDetails('${prod.id}')">${prod.name}</h4>
-                                <p class="text-[11px] text-gray-500">Age: ${prod.ageRecommendation || '3+ Years'}</p>
                                 <div class="flex items-center space-x-2 mt-1">
                                     ${prod.salePrice ? `<span class="text-emerald-600 font-black text-sm">${prod.salePrice}</span><span class="text-gray-400 line-through text-xs">${prod.price}</span>` : `<span class="text-indigo-950 font-black text-sm">${prod.price}</span>`}
                                 </div>
@@ -943,6 +929,46 @@
             document.getElementById('productCount').innerText = `Showing ${list.length} items`;
         }
 
+        // IMAGE DOWNLOAD FUNCTIONALITY
+        window.downloadProductImage = function(imgUrl, prodName) {
+            let cleanName = prodName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+            
+            // Agar image base64 format mein hai ya normal URL hai
+            if (imgUrl.startsWith('data:')) {
+                let a = document.createElement('a');
+                a.href = imgUrl;
+                a.download = `${cleanName}_image.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast("Product image downloads mein save ho gayi!");
+            } else {
+                // External image fetch karke download karne ke liye
+                fetch(imgUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        let blobUrl = window.URL.createObjectURL(blob);
+                        let a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = `${cleanName}_image.jpg`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(blobUrl);
+                        showToast("Product image downloads mein save ho gayi!");
+                    })
+                    .catch(err => {
+                        // Fallback agar direct link ho
+                        let a = document.createElement('a');
+                        a.href = imgUrl;
+                        a.target = '_blank';
+                        a.download = `${cleanName}_image.jpg`;
+                        a.click();
+                        showToast("Image download link open ho gaya hai!");
+                    });
+            }
+        }
+
         window.viewProductDetails = function(id) {
             let prod = products.find(p => p.id === id);
             if (!prod) return;
@@ -950,13 +976,17 @@
             let content = document.getElementById('productDetailContent');
             content.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <img src="${prod.image}" class="w-full h-64 object-cover rounded-2xl">
+                    <div class="relative">
+                        <img src="${prod.image}" class="w-full h-64 object-cover rounded-2xl">
+                        <button onclick="downloadProductImage('${prod.image}', '${prod.name}')" class="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow flex items-center space-x-1">
+                            <span>📥 Download Image</span>
+                        </button>
+                    </div>
                     <div class="space-y-3">
-                        <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${prod.category}</span>
+                        <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${prod.category || 'Toys'}</span>
                         <h3 class="text-xl font-extrabold text-indigo-950">${prod.name}</h3>
-                        <p class="text-xs text-gray-600">${prod.description || 'High quality interactive toy designed for kids safety and fun.'}</p>
+                        <p class="text-xs text-gray-600">${prod.description || 'High quality item available at A&M Online Store.'}</p>
                         <div class="text-xs text-gray-500 space-y-1">
-                            <p><strong>Age Recommendation:</strong> ${prod.ageRecommendation || '3+ Years'}</p>
                             <p><strong>Stock Status:</strong> <span class="${(prod.stockStatus === 'Out of Stock' || prod.stockAvailable === false) ? 'text-red-600' : 'text-emerald-600'} font-bold">${prod.stockStatus || (prod.stockAvailable === false ? 'Out of Stock' : 'In Stock')}</span></p>
                         </div>
                         <div class="text-lg font-black text-indigo-900">${prod.salePrice || prod.price}</div>
@@ -1189,7 +1219,7 @@
                             <div class="bg-white p-2 rounded border my-1 text-[11px] space-y-0.5">
                                 <p class="font-bold text-indigo-900">• ${p.name}</p>
                                 <p><strong>Price:</strong> ${p.price} | <strong>Sale Price:</strong> ${p.salePrice || 'N/A'}</p>
-                                <p><strong>Category:</strong> ${p.category || 'Toys'} | <strong>Age:</strong> ${p.ageRecommendation || '3+'}</p>
+                                <p><strong>Category:</strong> ${p.category || 'Toys'}</p>
                                 <p><strong>Qty:</strong> ${p.qty || 1}</p>
                             </div>
                         `;
@@ -1261,13 +1291,12 @@
                     price: `Rs ${document.getElementById('newProdPrice').value}`,
                     salePrice: document.getElementById('newProdSalePrice').value ? `Rs ${document.getElementById('newProdSalePrice').value}` : '',
                     category: document.getElementById('newProdCategory').value,
-                    ageRecommendation: document.getElementById('newProdAge').value,
                     stockStatus: document.getElementById('newProdStock').value,
                     stockAvailable: document.getElementById('newProdStock').value === 'In Stock',
                     description: document.getElementById('newProdDesc').value,
                     image: evt.target.result,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => showToast("Product Added Successfully to Firebase & AI Synced!"));
+                }).then(() => showToast("Product Added Successfully to Firebase Firestore & AI Synced!"));
             };
             reader.readAsDataURL(file);
         }
@@ -1279,7 +1308,7 @@
             products.forEach(p => {
                 list.innerHTML += `
                     <div class="flex justify-between items-center p-2 bg-gray-50 border rounded text-xs">
-                        <span>${p.name} (${p.price}) - ${p.stockStatus || 'In Stock'}</span>
+                        <span>${p.name} [${p.category || 'Toys'}] (${p.price}) - ${p.stockStatus || 'In Stock'}</span>
                         <button onclick="deleteProduct('${p.id}')" class="text-red-500 font-bold">Delete</button>
                     </div>
                 `;
@@ -1297,7 +1326,7 @@
             }
         }
 
-        // --- ROBUST HYBRID AI ASSISTANT ENGINE (FIREBASE & PROXY FALLBACK) ---
+        // --- ROBUST HYBRID ADVANCED AI ASSISTANT ENGINE (FIREBASE & PROXY FALLBACK) ---
         window.toggleChat = function() {
             let box = document.getElementById('ai-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
@@ -1320,19 +1349,20 @@
             let botReply = "";
 
             try {
-                let productsContext = products.map(p => `- ${p.name}: Price: ${p.salePrice || p.price}, Category: ${p.category}, Stock: ${p.stockStatus || 'In Stock'}, Age: ${p.ageRecommendation}, Description: ${p.description || 'N/A'}`).join('\n');
+                let productsContext = products.map(p => `- ${p.name}: Price: ${p.salePrice || p.price}, Category: ${p.category || 'Toys'}, Stock: ${p.stockStatus || 'In Stock'}, Description: ${p.description || 'N/A'}`).join('\n');
                 
-                let systemInstruction = `You are the official Smart AI Assistant for "A&M Online Store" (Website: https://azanmahan167.github.io/A-M-online-shop/). 
+                let systemInstruction = `You are the official Advanced Smart AI Assistant for "A&M Online Store" (Website: https://azanmahan167.github.io/A-M-online-shop/). 
+                The store features categories: Toys, Grocery, Stationery, and Electronic Things.
                 You respond warmly to greetings like "Hello", "Hey", "Assalam-o-Alaikum", "kaisa ho", "kya haal hai".
                 Helpline WhatsApp number: 03137221362.
                 Payment Method: Cash on Delivery (COD) only.
                 Order Steps: User adds products to cart, clicks cart icon, clicks Proceed to Checkout, fills out name, phone, city, area, address, and clicks Place Order Now.
                 Delivery Charges: Rs ${deliveryFee}.
                 Store Return Policy: Strict No-Return policy, but return is accepted IF an unboxing video proving damage or wrong item is provided.
-                Complete Real-Time Products Database (Synced from Firebase):
+                Complete Real-Time Products Database (Synced from Firebase Firestore):
                 ${productsContext}
                 
-                Keep your answers helpful, friendly, polite, concise, and formatted with emojis. Reply in Roman Urdu or English matching the user's language. Always answer any general or specific query accurately.`;
+                Keep your answers helpful, friendly, polite, concise, and formatted with emojis. Reply in Roman Urdu or English matching the user's language. Always answer any general or specific query accurately with advanced capability.`;
 
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
@@ -1345,10 +1375,9 @@
 
                 botReply = response.text;
             } catch (err) {
-                console.warn("Direct API blocked/failed, using intelligent fallback rules.", err);
+                console.warn("Direct API blocked/failed, using advanced fallback rules.", err);
             }
 
-            // Agar direct API response na mile ya block ho jaye, toh advanced fallback engine har sawal ka jawab dega
             if (!botReply) {
                 botReply = getAdvancedSmartBotResponse(text);
             }
@@ -1361,53 +1390,61 @@
         function getAdvancedSmartBotResponse(query) {
             let q = query.toLowerCase();
             
-            // Greetings & General Chat
             if (q.includes('hello') || q.includes('hey') || q.includes('assalam') || q.includes('salam')) {
-                return "Walaikumsalam! A&M Online Store mein khush amdeed 🧸. Main bilkul theek hoon, bataiye aaj aap ko kaun sa toy ya item chahiye?";
+                return "Walaikumsalam! A&M Online Store mein khush amdeed 🧸. Hamare paas Toys, Grocery, Stationery aur Electronic Things available hain. Bataiye aaj aapko kya chahiye?";
             }
             if (q.includes('kaisa ho') || q.includes('kya haal') || q.includes('how are you')) {
-                return "Main ek AI Assistant hoon aur aap ki khidmat ke liye hamesha tayar hoon! Aap batayein aap kaise hain aur store par kya dekhna chahenge? 😊";
+                return "Main ek Advanced AI Assistant hoon aur aap ki khidmat ke liye hamesha tayar hoon! Aap batayein aap kaise hain aur store par kya dekhna chahenge? 😊";
             }
             if (q.includes('kaun ho') || q.includes('who are you') || q.includes('introduce')) {
-                return "Main A&M Online Store ka Smart AI Assistant hoon jo aap ki shopping, order placement aur product selection mein madad karta hoon! 🧸🚀";
+                return "Main A&M Online Store ka Advanced Smart AI Assistant hoon jo aap ki shopping, order placement aur product selection mein madad karta hoon! 🚀";
             }
 
-            // Orders & Checkout
-            if (q.includes('order') || q.includes('tariqa') || q.includes('kaise karein') || q.includes('kharab')) {
+            if (q.includes('toy') || q.includes('khilona') || q.includes('bacho')) {
+                return "🧸 **Toys Category:** Hamare paas bacho ke liye behtareen toys aur games available hain jo aap direct cart mein add kar sakte hain!";
+            }
+            if (q.includes('grocery') || q.includes('ration') || q.includes('khane peene')) {
+                return "🛒 **Grocery Category:** Behtareen grocery items available hain jo aap Cash on Delivery par mangwa sakte hain!";
+            }
+            if (q.includes('stationery') || q.includes('pens') || q.includes('notebook') || q.includes('school')) {
+                return "📚 **Stationery Category:** School aur office ke liye tamam stationery items available hain!";
+            }
+            if (q.includes('electronic') || q.includes('gadgets') || q.includes('devices') || q.includes('bijli')) {
+                return "⚡ **Electronic Things:** Useful electronic gadgets aur devices hamare store par available hain!";
+            }
+
+            if (q.includes('order') || q.includes('tariqa') || q.includes('kaise karein')) {
                 return "🛍️ **Order Karne Ka Asaan Tariqa:**\n1. Apni pasand ka product chun kar 'Add to Cart' ya 'Buy Now' dabayein.\n2. Upar diye gaye **Cart** icon par click karein.\n3. 'Proceed to Checkout' par click karke apna Naam, WhatsApp Number, City, aur Complete Address likhein.\n4. 'Place Order Now' dabate hi aapka order Cash on Delivery (COD) par confirm ho jayega! 📦";
             }
-            if (q.includes('payment') || q.includes('paisa') || q.includes('jazzcash') || q.includes('easypaisa') || q.includes('online payment')) {
+            if (q.includes('payment') || q.includes('paisa') || q.includes('jazzcash') || q.includes('easypaisa')) {
                 return "💵 Hamare store par sirf **Cash on Delivery (COD)** ki sahulat available hai. Jab order aapke ghar pohnchega tab aap courier ko cash pay karenge.";
             }
 
-            // Contact & Helpline
-            if (q.includes('helpline') || q.includes('number') || q.includes('whatsapp') || q.includes('rabta') || q.includes('contact')) {
+            if (q.includes('helpline') || q.includes('number') || q.includes('whatsapp') || q.includes('rabta')) {
                 return "📞 Aap hum se WhatsApp par direct rabta kar sakte hain:\nOfficial Helpline: **03137221362** ( ya click karein: https://wa.me/923137221362 ) 💬";
             }
             if (q.includes('link') || q.includes('website') || q.includes('site')) {
                 return "🔗 Hamari official website ka link yeh hai: https://azanmahan167.github.io/A-M-online-shop/";
             }
 
-            // Policies
             if (q.includes('return') || q.includes('wapsi') || q.includes('refund') || q.includes('exchange')) {
-                return "🔄 **Return Policy:** Hamari strict No-Return policy hai, lekin agar aapke paas **unboxing video** maujood hai jisme itemdamaged ya galat nikle, toh hum return/exchange accept kar lete hain!";
+                return "🔄 **Return Policy:** Hamari strict No-Return policy hai, lekin agar aapke paas **unboxing video** maujood hai jisme item damaged ya galat nikle, toh hum return/exchange accept kar lete hain!";
             }
             if (q.includes('delivery') || q.includes('shipping') || q.includes('charges') || q.includes('din')) {
                 return "🚚 Delivery poore Pakistan mein 2 se 4 working days mein ho jati hai. Standard delivery charges **Rs " + deliveryFee + "** hain.";
             }
 
-            // Products database check
             let matchedProd = products.find(p => q.includes(p.name.toLowerCase()) || (p.category && q.includes(p.category.toLowerCase())));
             if (matchedProd) {
-                return `🧸 **${matchedProd.name}**\n- Price: ${matchedProd.salePrice || matchedProd.price}\n- Category: ${matchedProd.category}\n- Age Group: ${matchedProd.ageRecommendation || '3+ Years'}\n- Status: ${matchedProd.stockStatus || 'In Stock'}\n\nAap ise cart mein add karke foran order kar sakte hain! 🚀`;
+                return `📦 **${matchedProd.name}**\n- Category: ${matchedProd.category || 'Toys'}\n- Price: ${matchedProd.salePrice || matchedProd.price}\n- Status: ${matchedProd.stockStatus || 'In Stock'}\n\nAap ise cart mein add karke foran order kar sakte hain! 🚀`;
             }
 
-            if (q.includes('price') || q.includes('qimat') || q.includes('rate') || q.includes('kya hai')) {
-                let listStr = products.slice(0, 5).map(p => `• ${p.name}: ${p.salePrice || p.price}`).join('\n');
-                return `🧸 Yeh hamare kuch popular items hain:\n${listStr}\nAap mazeed items ke liye website ka catalog check kar sakte hain!`;
+            if (q.includes('price') || q.includes('qimat') || q.includes('rate')) {
+                let listStr = products.slice(0, 5).map(p => `• ${p.name} [${p.category || 'Toys'}]: ${p.salePrice || p.price}`).join('\n');
+                return `📦 Yeh hamare kuch popular items hain:\n${listStr}\nAap mazeed items ke liye website ka catalog check kar sakte hain!`;
             }
 
-            return `🧸 A&M Online Store par khush amdeed! Hamare paas bacho ke liye behtareen toys aur games Cash on Delivery par available hain. Mazeed maloomat ke liye helpline **03137221362** par rabta karein! 🚀`;
+            return `🧸 A&M Online Store par khush amdeed! Hamare paas Toys, Grocery, Stationery aur Electronic Things Cash on Delivery par available hain. Mazeed maloomat ke liye helpline **03137221362** par rabta karein! 🚀`;
         }
 
         window.openPolicyModal = function(type) {
